@@ -1,3 +1,16 @@
+(* 
+This formalization defines the axiom system which the unexpected hanging paradox informally describes.
+Unsurprisingly, a reasonably defined notion of "surprise", when introduced into the system as one of 
+the axioms, ie. one of the requirements of the hanging paradox system, introduces inconsistency.
+
+As a result, admitting the SURPRISE axiom allows us to prove everything (from False). 
+The unexpected hanging situation is not a "paradox" so much as it is having contradictory 
+requirements for the system to specify, making it inconsistent 
+
+If we do not require to be surprised by a Friday hanging on Thursday, there is no 
+inconsistency.
+*) 
+
 (* week days *)
 Inductive weekDay : Type :=
   | monday : weekDay
@@ -6,6 +19,8 @@ Inductive weekDay : Type :=
   | thursday : weekDay
   | friday : weekDay.
 
+(* a week day OR some day before the week starts,
+the type used to specify a "today" *)
 Inductive weekAndBefore : Type :=
   | dayBefore : weekAndBefore
   | someWeekDay : weekDay -> weekAndBefore.
@@ -21,6 +36,15 @@ Defined.
 
 (* the predicate stating that hanging is not not happening on day d, ie. it can happen on d *)
 Definition hangingCanBeOn := fun (d : weekDay) => (~~ (hangingOnDay d)).
+
+(* this predicate says we can neither prove nor disprove that a hanging is on d *)
+Definition cantProveOn := fun (d : weekDay) => (~ (hangingCanBeOn d \/ ~hangingCanBeOn d)).
+
+(* if we cant prove either that hanging happens on d or that it doesnt happen,
+hanging could happen on d *)
+Definition proveCanBe : forall d, cantProveOn d -> hangingCanBeOn d.
+intro. compute. tauto.
+Qed.
 
 (* is the day td before day d? *)
 Fixpoint isBefore (td : weekAndBefore) (d : weekDay) : Prop :=
