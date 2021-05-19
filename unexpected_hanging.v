@@ -38,7 +38,7 @@ Defined.
 Definition hangingCanBeOn := fun (d : weekDay) => (~~ (hangingOnDay d)).
 
 (* this predicate says we can neither prove nor disprove that a hanging is on d *)
-Definition cantProveOn := fun (d : weekDay) => (~ (hangingCanBeOn d \/ ~hangingCanBeOn d)).
+Definition cantProveOn := fun (d : weekDay) => (~ (hangingOnDay d \/ ~hangingOnDay d)).
 
 (* if we cant prove either that hanging happens on d or that it doesnt happen,
 hanging could happen on d *)
