@@ -140,32 +140,7 @@ elim H; intros H1 H2. generalize (H1 d). tauto. Qed.
 
 (* eq on days is decidable *)
 Definition dayEqDec : forall x d : weekDay, (x=d \/ x<>d). 
-intros. destruct d; destruct x; compute.
-apply or_introl. auto.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror. intro dys; inversion dys.
-apply or_introl; auto.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_introl. auto.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_introl. auto.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_intror; intro dys; inversion dys.
-apply or_introl. auto.
+destruct d, x; intuition discriminate.
 Qed.
 
 (* if hanging didnt happen by thursday, it happens on friday *)
