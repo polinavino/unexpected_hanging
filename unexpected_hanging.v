@@ -9,6 +9,10 @@ requirements for the system to specify, making it inconsistent
 
 If we do not require to be surprised by a Friday hanging on Thursday, there is no 
 inconsistency.
+
+NOTE : this adjusted definition of SURPRISE that excludes today being Thursday (and 
+allows for preditability of surprise on Friday) is just changing the requirements to be surprised,
+NOT excluding these from the axiom system.
 *) 
 
 (* week days *)
@@ -38,6 +42,7 @@ Defined.
 Definition hangingCanBeOn := fun (d : weekDay) => (~~ (hangingOnDay d)).
 
 (* this predicate says we can neither prove nor disprove that a hanging is on d *)
+(* I think this will probably work instead of hangingCanBeOn, but not sure *)
 Definition cantProveOn := fun (d : weekDay) => (~ (hangingOnDay d \/ ~hangingOnDay d)).
 
 (* if we cant prove either that hanging happens on d or that it doesnt happen,
