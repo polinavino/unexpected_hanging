@@ -36,9 +36,6 @@ Inductive weekAndBefore : Type :=
 (* hangingOnDay (d) means that hanging happened on day d *)
 (* it means we know and can prove it happened on day d *)
 Variable hangingOnDay : weekDay -> Prop.
-(*
-Definition asd : forall d, ~ ((hangingOnDay d) \/ (~ hangingOnDay d)).
-intros. compute. intros. inversion H. tauto. *)
 
 (* the proposition stating that hanging happens on one of the weekdays *)
 Definition hangingHappens : Prop. 
@@ -47,16 +44,6 @@ Defined.
 
 (* the predicate stating that hanging is not not happening on day d, ie. it can happen on d *)
 Definition hangingCanBeOn := fun (d : weekDay) => (~~ (hangingOnDay d)).
-
-(* this predicate says we can neither prove nor disprove that a hanging is on d *)
-(* I think this will probably work instead of hangingCanBeOn, but not sure *)
-Definition cantProveOn := fun (d : weekDay) => (~ (hangingOnDay d \/ ~hangingOnDay d)).
-
-(* if we cant prove either that hanging happens on d or that it doesnt happen,
-hanging could happen on d *)
-Definition proveCanBe : forall d, cantProveOn d -> hangingCanBeOn d.
-intro. compute. tauto.
-Qed.
 
 (* is the day td before day d? *)
 Fixpoint isBefore (td : weekAndBefore) (d : weekDay) : Prop :=
