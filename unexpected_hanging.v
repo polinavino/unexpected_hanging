@@ -7,12 +7,16 @@ As a result, admitting the SURPRISE axiom allows us to prove everything (from Fa
 The unexpected hanging situation is not a "paradox" so much as it is having contradictory 
 requirements for the system to specify, making it inconsistent 
 
+Thus, if we admit SURPRISE, we are able to prove False, and from that, anything - 
+including that the hanging happened on one of the days!
+
 If we do not require to be surprised by a Friday hanging on Thursday, there is no 
 inconsistency.
 
 NOTE : this adjusted definition of SURPRISE that excludes today being Thursday (and 
-allows for preditability of surprise on Friday) is just changing the requirements to be surprised,
-NOT excluding these from the axiom system.
+allows for preditability of hanging on Friday) is just changing the requirements to be surprised,
+NOT excluding these from the axiom system. It is added as a weak sanity check for the other 
+axioms.
 *) 
 
 (* week days *)
@@ -189,6 +193,18 @@ generalize (H1 tf friday). intros.
 generalize noFri. tauto.
 Qed.
 
+(* if a hanging is on day d, and today is before that day, then no hanging happened yet *)
+Definition notBefore : forall td, forall d, hangingOnDay d -> isBefore td d -> noHangingYet td.
+intros.
+destruct td.
+compute. tauto.
+unfold noHangingYet. intros. intro.
+generalize (only_one_hanging d H d0). intros.
+generalize (dayEqDec d d0). intros.
+inversion H4. 
+apply H1. rewrite <- H5. tauto. tauto.
+Qed.
+
 (* 
 if we exclude EITHER
 - that today is thursday, OR
@@ -202,176 +218,103 @@ Definition allgoodBeforeThurs : forall td : weekAndBefore, forall d,
   (d <> friday \/ (td <> someWeekDay thursday)) ->
   (hangingOnDay d -> ~(isBefore td d)).
 
-intros. intro. generalize H1.
+intros. intro. 
+generalize (notBefore td d H0 H1). intros. generalize H1.
+
 destruct d; destruct td; try (destruct w); inversion H; try (compute; tauto); try (intro isb; clear isb).
-generalize (def_maybe_future dayBefore H tuesday). compute. intro def_may.
-generalize (only_one_hanging monday H4 tuesday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 tuesday). compute. intro def_may.
+generalize (only_one_hanging monday H0 tuesday). intro one_hang.
 assert (~ hangingOnDay tuesday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay monday).
-generalize (def_maybe_future dayBefore H monday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H tuesday). compute. intro def_may.
-generalize (only_one_hanging monday H4 tuesday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 tuesday). compute. intro def_may.
+generalize (only_one_hanging monday H0 tuesday). intro one_hang.
 assert (~ hangingOnDay tuesday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay monday).
-generalize (def_maybe_future dayBefore H monday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H wednesday). compute. intro def_may.
-generalize (only_one_hanging tuesday H4 wednesday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 wednesday). compute. intro def_may.
+generalize (only_one_hanging tuesday H0 wednesday). intro one_hang.
 assert (~ hangingOnDay wednesday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay tuesday).
-generalize (def_maybe_future dayBefore H tuesday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H wednesday). compute. intro def_may.
-generalize (only_one_hanging tuesday H4 wednesday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 wednesday). compute. intro def_may.
+generalize (only_one_hanging tuesday H0 wednesday). intro one_hang.
 assert (~ hangingOnDay wednesday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay tuesday).
-generalize (def_maybe_future dayBefore H tuesday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H wednesday). compute. intro def_may.
-generalize (only_one_hanging tuesday H4 wednesday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 wednesday). compute. intro def_may.
+generalize (only_one_hanging tuesday H0 wednesday). intro one_hang.
 assert (~ hangingOnDay wednesday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay tuesday).
-generalize (def_maybe_future (someWeekDay monday) H tuesday). compute. intro def_may.
- tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H wednesday). compute. intro def_may.
-generalize (only_one_hanging tuesday H4 wednesday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 wednesday). compute. intro def_may.
+generalize (only_one_hanging tuesday H0 wednesday). intro one_hang.
 assert (~ hangingOnDay wednesday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay tuesday).
-generalize (def_maybe_future (someWeekDay monday) H tuesday). compute. intro def_may.
- tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H thursday). compute. intro def_may.
-generalize (only_one_hanging wednesday H4 thursday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 thursday). compute. intro def_may.
+generalize (only_one_hanging wednesday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay wednesday).
-generalize (def_maybe_future dayBefore H wednesday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H thursday). compute. intro def_may.
-generalize (only_one_hanging wednesday H4 thursday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 thursday). compute. intro def_may.
+generalize (only_one_hanging wednesday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay wednesday).
-generalize (def_maybe_future dayBefore H wednesday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H thursday). compute. intro def_may.
-generalize (only_one_hanging wednesday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging wednesday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay wednesday).
-generalize (def_maybe_future (someWeekDay monday) H wednesday). compute. intro def_may.
- tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H thursday). compute. intro def_may.
-generalize (only_one_hanging wednesday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging wednesday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay wednesday).
-generalize (def_maybe_future (someWeekDay monday) H wednesday). compute. intro def_may.
- tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay tuesday) H thursday). compute. intro def_may.
-generalize (only_one_hanging wednesday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay tuesday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging wednesday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay wednesday).
-generalize (def_maybe_future (someWeekDay tuesday) H wednesday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay tuesday) H thursday). compute. intro def_may.
-generalize (only_one_hanging wednesday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay tuesday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging wednesday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay wednesday).
-generalize (def_maybe_future (someWeekDay tuesday) H wednesday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future dayBefore H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future dayBefore H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future (someWeekDay monday) H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future (someWeekDay monday) H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay tuesday) H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future (someWeekDay tuesday) H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future (someWeekDay tuesday) H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay tuesday) H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future (someWeekDay tuesday) H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future (someWeekDay tuesday) H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay wednesday) H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future (someWeekDay wednesday) H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future (someWeekDay wednesday) H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay wednesday) H friday). compute. intro def_may.
-generalize (only_one_hanging thursday H4 friday). intro one_hang.
+generalize (def_maybe_future (someWeekDay wednesday) H2 friday). compute. intro def_may.
+generalize (only_one_hanging thursday H0 friday). intro one_hang.
 assert (~ hangingOnDay friday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay thursday).
-generalize (def_maybe_future (someWeekDay wednesday) H thursday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future dayBefore H thursday). compute. intro def_may.
-generalize (only_one_hanging friday H4 thursday). intro one_hang.
+generalize (def_maybe_future dayBefore H2 thursday). compute. intro def_may.
+generalize (only_one_hanging friday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay friday).
-generalize (def_maybe_future dayBefore H friday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay monday) H thursday). compute. intro def_may.
-generalize (only_one_hanging friday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay monday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging friday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay friday).
-generalize (def_maybe_future (someWeekDay monday) H friday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay tuesday) H thursday). compute. intro def_may.
-generalize (only_one_hanging friday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay tuesday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging friday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay friday).
-generalize (def_maybe_future (someWeekDay tuesday) H friday). compute. intro def_may. tauto. tauto.
 
-intro. inversion H3.
-generalize (def_maybe_future (someWeekDay wednesday) H thursday). compute. intro def_may.
-generalize (only_one_hanging friday H4 thursday). intro one_hang.
+generalize (def_maybe_future (someWeekDay wednesday) H2 thursday). compute. intro def_may.
+generalize (only_one_hanging friday H0 thursday). intro one_hang.
 assert (~ hangingOnDay thursday). apply one_hang. compute. intro ne; inversion ne. tauto.
-assert (~~ hangingOnDay friday).
-generalize (def_maybe_future (someWeekDay wednesday) H friday). compute. intro def_may. tauto. tauto.
 Qed.
