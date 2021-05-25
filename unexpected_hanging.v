@@ -97,7 +97,6 @@ Inductive chooseDays : Type :=
 Fixpoint apl (cd : chooseDays) (d : weekDay) : Prop :=
 match cd with
   | allDays => match d with
-      | monday => False
       | _ => True
     end
   | tilFri => match d with
