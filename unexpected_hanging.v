@@ -17,7 +17,9 @@ that excludes the hanging from being on days on which surprise is not possible.
 We do not know ahead of time which days those are, but it does not matter. We show that 
 if we take *any* of the subsets (of hanging days) that were considered by the hangee
 (ie. Mon-Fri, Mon-Thurs, Mon-Wed, etc.), and require to be surprised only by hangings 
-on those days. Since we know it is necessary 
+on those days (with the assumption that the hanging cannot happen on the other days). 
+
+Since we know it is necessary 
 that 
 - the hanging happens, and 
 - it is a surprise, 
@@ -154,10 +156,13 @@ Definition SURPRISE := forall td : weekAndBefore, forall d,
   hangingOnDay d -> ~(isBefore td d).
 
 (* given any subset of week days on which surprise will hold (and thus hanging is possible),
-restrict a definition of surprise to only those days *)
+- restrict a definition of surprise to only those days,
+- restrict the hanging to be possible only on those days *)
 Definition SOME_DAYS_SURPRISE := forall (someDays : chooseDays), 
-  forall td : weekAndBefore, forall d, apl someDays d ->
-  hangingOnDay d -> ~(isBefore td d).
+  forall td : weekAndBefore, forall d, (apl someDays d ->
+  hangingOnDay d -> ~ isBefore td d)
+  /\
+  (~ apl someDays d -> ~ hangingOnDay d).
 
 (* If the hanging happens on d, it can happen on d *)
 Definition doesImpCan : (weekDay -> Prop) -> Prop.
