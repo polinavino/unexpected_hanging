@@ -3,20 +3,29 @@ This formalization defines the axiom system which the unexpected hanging paradox
 Unsurprisingly, a reasonably defined notion of "surprise", when introduced into the system as one of 
 the axioms, ie. one of the requirements of the hanging paradox system, introduces inconsistency.
 
-As a result, admitting the SURPRISE axiom allows us to prove everything (from False). 
-The unexpected hanging situation is not a "paradox" so much as it is having contradictory 
-requirements for the system to specify, making it inconsistent 
-
-Thus, if we admit SURPRISE, we are able to prove False, and from that, anything - 
+We start by defining SURPRISE as a requirement to be surprised by a hanging on every day 
+of the week, including being surprised on Thursday by a Friday hanging. This 
+is False, and thus this SURPRISE requirement introduces a contradiction, ie. proves False.
+From False, we can prove anything - 
 including that the hanging happened on one of the days!
 
+Now, the paradox does not require that the hanging necessarily be a surprise on *every* week day,
+only that it is a surprise when it does happen. That is, on the days surprise is not possible,
+such a Friday, the hanging will not happen. We can thus construct an updated definition of surprise
+that excludes the hanging from being on days on which surprise is not possible. 
+
+We do not know ahead of time which days those are, but it does not matter. We show that 
+if we take *any* of the subsets (of hanging days) that were considered by the hangee
+(ie. Mon-Fri, Mon-Thurs, Mon-Wed, etc.), and require to be surprised only by hangings 
+on those days. Since we know it is necessary 
+that 
+- the hanging happens, and 
+- it is a surprise, 
+such a selected-day definition of surprise can still be shown to introduces inconsistency.
+
+There is also the following sanity check : allgoodBeforeThursday.
 If we do not require to be surprised by a Friday hanging on Thursday, there is no 
 inconsistency.
-
-NOTE : this adjusted definition of SURPRISE that excludes today being Thursday (and 
-allows for preditability of hanging on Friday) is just changing the requirements to be surprised,
-NOT excluding these from the axiom system. It is added as a weak sanity check for the other 
-axioms.
 *) 
 
 (* week days *)
@@ -76,6 +85,48 @@ match td with
     end
 end.
 
+(* week days *)
+Inductive chooseDays : Type :=
+  | allDays : chooseDays
+  | tilFri : chooseDays
+  | tilThurs : chooseDays
+  | tilWed : chooseDays
+  | tilTue : chooseDays
+  | tilMon : chooseDays.
+
+Fixpoint apl (cd : chooseDays) (d : weekDay) : Prop :=
+match cd with
+  | allDays => match d with
+      | monday => False
+      | _ => True
+    end
+  | tilFri => match d with
+      | friday => False
+      | _ => True
+    end
+  | tilThurs => match d with
+      | thursday => False
+      | friday => False
+      | _ => True
+    end
+  | tilWed => match d with
+      | wednesday => False
+      | thursday => False
+      | friday => False
+      | _ => True
+    end
+  | tilTue => match d with
+      | tuesday => False
+      | wednesday => False
+      | thursday => False
+      | friday => False
+      | _ => True
+    end
+  | tilMon => match d with
+      | _ => False
+    end
+end.
+
 (* the hanging has not happened today or before *)
 Definition noHangingYet := fun (td : weekAndBefore) => (forall d : weekDay, (~ isBefore td d) -> (~ hangingOnDay d)).
 
@@ -103,6 +154,11 @@ proving that a hanging happens on a given day is not possible *)
 Definition SURPRISE := forall td : weekAndBefore, forall d,
   hangingOnDay d -> ~(isBefore td d).
 
+(* given any subset of week days on which surprise will hold (and thus hanging is possible),
+restrict a definition of surprise to only those days *)
+Definition SOME_DAYS_SURPRISE := forall (someDays : chooseDays), 
+  forall td : weekAndBefore, forall d, apl someDays d ->
+  hangingOnDay d -> ~(isBefore td d).
 
 (* If the hanging happens on d, it can happen on d *)
 Definition doesImpCan : (weekDay -> Prop) -> Prop.
@@ -179,6 +235,14 @@ assert ((forall d : weekDay, (True -> False) -> hangingOnDay d -> False)) as tf.
 generalize (H1 tf friday). intros.
 generalize noFri. tauto.
 Qed.
+
+(* surprise definition that restricts hanging days to only some days,
+including to only the surprise-possible days, is also inconsistent *)
+(*
+Definition someDaysSupriseIsWrong : ~SOME_DAYS_SURPRISE.
+unfold SOME_DAYS_SURPRISE.
+prove this!
+*)
 
 (* if a hanging is on day d, and today is before that day, then no hanging happened yet *)
 Definition notBefore : forall td, forall d, hangingOnDay d -> isBefore td d -> noHangingYet td.
