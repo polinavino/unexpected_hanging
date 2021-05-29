@@ -2,6 +2,7 @@
 This formalization defines the axiom system which the unexpected hanging paradox informally describes.
 Unsurprisingly, a reasonably defined notion of "surprise", when introduced into the system as one of 
 the axioms, ie. one of the requirements of the hanging paradox system, introduces inconsistency.
+ - surpriseIsWrong
 
 Since we have proved False from the contradictory axioms, we can not prove anything about the system, 
 including that the hanging happens on any day, and that it is a surprise. Hence, the prophecy is fulfilled.
@@ -11,9 +12,15 @@ We require the following to be true:
   - hanging_definitely_happens
 2. There is exactly one hanging that can happen
   - only_one_hanging
+3. We always know for sure whether a hanging happened on a past day (or today) - we dont use this
+to prove anything here
+  - def_know_past
 
 The SURPRISE is defined by requiring that we may prove that a hanging happens on a specific day 
 only if that day is in the past (or today).
+
+In order to ensure the possibility of surprise, we need to guarantee that there are at least 2 options 
+for days on which the hanging can happen. So, we can re-state SURPRISE as MIN_TWO_OPTIONS
 *) 
 
 (* week days *)
@@ -34,10 +41,9 @@ Inductive weekAndBefore : Type :=
 (* it means we know and can prove it happened on day d *)
 Variable hangingOnDay : weekDay -> Prop.
 
-(* the proposition stating that hanging happens on one of the weekdays *)
-Definition hangingHappens : Prop. 
-exact (exists d, (hangingOnDay d)).
-Defined.
+(* the proposition stating that it's not true that hanging happens on 
+none of the weekdays *)
+Definition hangingHappens := ~(forall d, ~hangingOnDay d).
 
 (* the predicate stating that hanging is not not happening on day d, ie. it can happen on d *)
 Definition hangingCanBeOn := fun (d : weekDay) => (~~ (hangingOnDay d)).
@@ -83,6 +89,10 @@ Axiom hanging_definitely_happens : hangingHappens.
 
 (* if the hanging happens on day d, it does not happen on any other day *)
 Axiom only_one_hanging : forall d : weekDay, (hangingOnDay d) -> (forall d' : weekDay, (d <> d') -> ~ (hangingOnDay d')).
+
+(* for any day d, if today is after or on that day, we definitely know if the hanging happened on d or not *)
+Axiom def_know_past : forall d : weekDay, forall td : weekAndBefore, 
+  ~ (isBefore td d) -> (hangingOnDay d \/ ~ hangingOnDay d).
 
 (* we are surprised whenever :
 IF the hanging did not yet happen up to and including today,
@@ -131,78 +141,66 @@ Definition dayEqDec : forall x d : weekDay, (x=d \/ x<>d).
 destruct d, x; intuition discriminate.
 Qed.
 
-(* if hanging didnt happen by thursday, it happens on friday *)
-Definition defFri : noHangingYet (someWeekDay thursday) <-> hangingOnDay friday. 
-generalize hanging_definitely_happens.
-compute. split. intros. elim H. intros.
-generalize H1. destruct x; auto. generalize (H0 monday). tauto.
-generalize (H0 tuesday). tauto.
- generalize (H0 wednesday). tauto.
- generalize (H0 thursday). tauto.
-intros. apply H1.
-generalize (only_one_hanging d H2 friday). compute. intros.
-generalize (dayEqDec d friday). intro.
-inversion H4. rewrite H5. auto. compute in H5.
-generalize (H3 H5 H0). tauto. 
-Qed.
-
 (* SURPRISE implies that hanging can't be on friday *)
 Definition noFri : SURPRISE -> ~ hangingOnDay friday. 
 generalize hanging_definitely_happens.
 compute. intros. elim H. intros.
-generalize (H0 (someWeekDay thursday) x H2). 
-intros. apply H3. 
-assert (x=friday). 
-generalize (only_one_hanging x H2 friday). compute. intros.
-generalize (dayEqDec x friday). intros.
-inversion H5. auto. tauto. rewrite H4. tauto.
+assert (d=friday). 
+generalize (only_one_hanging d H2 friday). compute. intros.
+generalize (dayEqDec d friday). intros.
+inversion H4. auto. tauto.
+generalize (H0 (someWeekDay thursday) friday H1). tauto. 
 Qed.
 
 (* SURPRISE implies that hanging can't be on thursday *)
 Definition noThurs : SURPRISE -> ~ hangingOnDay thursday. 
-intro S. generalize (noFri S).
+unfold SURPRISE.
+intro S. generalize (noFri S). 
 generalize hanging_definitely_happens.
-compute. intros. elim H. intros. unfold SURPRISE in S.
-generalize (S (someWeekDay wednesday) x H2). intros.
-apply H3. assert (x=thursday). 
-generalize (only_one_hanging x H2 thursday). compute. intros.
-generalize (dayEqDec x thursday). intros.
+compute. intros. elim H. intros. 
+generalize (S (someWeekDay wednesday) d H2). intros.
+apply H3. assert (d=thursday). 
+generalize (only_one_hanging d H2 thursday). compute. intros.
+generalize (dayEqDec d thursday). intros.
 inversion H5. auto. tauto. rewrite H4. compute. tauto.
 Qed.
 
 (* SURPRISE implies that hanging can't be on wednesday *)
 Definition noWed : SURPRISE -> ~ hangingOnDay wednesday. 
-intro S. generalize (noFri S). generalize (noThurs S).
+unfold SURPRISE.
+intro S. generalize (noFri S). generalize (noThurs S). 
 generalize hanging_definitely_happens.
-compute. intros. elim H. intros. unfold SURPRISE in S.
-generalize (S (someWeekDay tuesday) x H3). intros.
-apply H4. assert (x=wednesday). 
-generalize (only_one_hanging x H3 wednesday). compute. intros.
-generalize (dayEqDec x wednesday). intros.
+compute. intros. elim H. intros. 
+generalize (S (someWeekDay tuesday) d H3). intros.
+apply H4. assert (d=wednesday). 
+generalize (only_one_hanging d H3 wednesday). compute. intros.
+generalize (dayEqDec d wednesday). intros.
 inversion H6. auto. tauto. rewrite H5. compute. tauto.
 Qed.
 
 (* SURPRISE implies that hanging can't be on tuesday *)
 Definition noTue : SURPRISE -> ~ hangingOnDay tuesday. 
-intro S. generalize (noFri S). generalize (noThurs S). generalize (noWed S).
+unfold SURPRISE.
+intro S. generalize (noFri S). generalize (noThurs S). generalize (noWed S). 
 generalize hanging_definitely_happens.
-compute. intros. elim H. intros. unfold SURPRISE in S.
-generalize (S (someWeekDay monday) x H4). intros.
-apply H5. assert (x=tuesday). 
-generalize (only_one_hanging x H4 tuesday). compute. intros.
-generalize (dayEqDec x tuesday). intros.
+compute. intros. elim H. intros. 
+generalize (S (someWeekDay monday) d H4). intros.
+apply H5. assert (d=tuesday). 
+generalize (only_one_hanging d H4 tuesday). compute. intros.
+generalize (dayEqDec d tuesday). intros.
 inversion H7. auto. tauto. rewrite H6. compute. tauto.
 Qed.
 
 (* SURPRISE implies that hanging can't be on monday *)
 Definition noMon : SURPRISE -> ~ hangingOnDay monday. 
-intro S. generalize (noFri S). generalize (noThurs S). generalize (noWed S). generalize (noTue S).
+unfold SURPRISE.
+intro S. generalize (noFri S). generalize (noThurs S). generalize (noWed S). generalize (noTue S). 
 generalize hanging_definitely_happens.
-compute. intros. elim H. intros. unfold SURPRISE in S.
-generalize (S dayBefore x H5). intros.
-apply H6. assert (x=monday). 
-generalize (only_one_hanging x H5 monday). compute. intros.
-generalize (dayEqDec x monday). intros.
+compute. intros. elim H. intros. 
+generalize (S dayBefore d H5). intros.
+apply H6. assert (d=monday). 
+generalize (only_one_hanging d H5 monday). compute. intros.
+generalize (dayEqDec d monday). intros.
 inversion H8. auto. tauto. rewrite H7. compute. tauto.
 Qed.
 
@@ -225,3 +223,66 @@ generalize (dayEqDec d d0). intros.
 inversion H4. 
 apply H1. rewrite <- H5. tauto. tauto.
 Qed.
+
+(*
+(* if hanging didnt happen by thursday, it happens on friday *)
+Definition defFri : noHangingYet (someWeekDay thursday) <-> hangingOnDay friday. 
+generalize hanging_definitely_happens.
+compute. split. 
+intros. 
+
+
+intros. apply H1. 
+generalize (dayEqDec d friday). intro. inversion H3.
+rewrite H4. auto.
+generalize (only_one_hanging d H2 friday). compute. intros.
+generalize (H5 H4 H0). tauto. i
+
+ntros. apply H6.
+generalize (H0 d).
+rewrite H3. rewrite H3 in H1. intros. apply H. tauto.
+apply H0.
+generalize H1. destruct x; auto. generalize (H0 monday). tauto.
+generalize (H0 tuesday). tauto.
+ generalize (H0 wednesday). tauto.
+ generalize (H0 thursday). tauto.
+intros. apply H1.
+generalize (only_one_hanging d H2 friday). compute. intros.
+generalize (dayEqDec d friday). intro.
+inversion H4. rewrite H5. auto. compute in H5.
+generalize (H3 H5 H0). tauto. 
+Qed. *)
+
+(* always know if a hanging happened already or not *) 
+(*
+Definition defKnowPast : forall td, forall d, hangingOnDay d -> isBefore td d -> noHangingYet td.*)
+
+(* 
+if we exclude EITHER
+- that today is thursday, OR
+- that the hanging is on friday
+we get that
+if the hanging is provably on day d, 
+that day must be today or before today
+This is a consistent version of the definition of surprise
+*)
+(*
+Definition allgoodBeforeThurs : forall td : weekAndBefore, forall d,
+  (d <> friday \/ (td <> someWeekDay thursday)) ->
+  (hangingOnDay d -> ~(isBefore td d)).
+
+intros. intro. 
+generalize (notBefore td d H0 H1). intros. generalize H1.
+generalize (hanging_definitely_happens). unfold hangingHappens. intros.
+intros. apply H3. intros. generalize (only_one_hanging d H0 d0). intros.
+generalize (dayEqDec d d0). intros. inversion H6; auto.
+intros. intro.
+
+generalize hanging_definitely_happens.
+compute. intros. elim H. intros.
+assert (d=friday). 
+generalize (only_one_hanging d H2 friday). compute. intros.
+generalize (dayEqDec d friday). intros.
+inversion H4. auto. tauto.
+generalize (H0 (someWeekDay thursday) friday H1). tauto.  *)
+
