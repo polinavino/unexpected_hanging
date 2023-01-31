@@ -70,7 +70,7 @@
 % \documentclass[journal]{../sty/IEEEtran}
 
 \usepackage{changepage}
-
+\usepackage{hyperref}
 \newenvironment{myindent}{\begin{adjustwidth}{1cm}{}}{\end{adjustwidth}}
 
 \usepackage{listings}
@@ -419,7 +419,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Constructive Logic Approach to Solving the Unexpected Hanging Paradox}
+\title{Solving the Unexpected Hanging Paradox with a New Surprise Definition}
 %
 %
 % author names and IEEE memberships
@@ -431,9 +431,7 @@
 % was not built to handle multiple paragraphs
 %
 
-\author{Michael~Shell,~\IEEEmembership{Member,~IEEE,}
-        John~Doe,~\IEEEmembership{Fellow,~OSA,}
-        and~Jane~Doe,~\IEEEmembership{Life~Fellow,~IEEE}}% <-this % stops a space
+\author{Polina Vinogradova}% <-this % stops a space
 
 % note the % following the last \IEEEmembership and also \thanks -
 % these prevent an unwanted space from occurring between the last author name
@@ -490,20 +488,18 @@
 In this work we define a novel approach to formally specifying the
 unexpected hanging paradox, sometimes called the surprise examination paradox, using a
 constructive logical framework. We build this formal specification using the
-Coq proof assistant.
-This paradox requires the formalization of the notion of
+Coq proof assistant. This paradox requires the formalization of the notion of
 a \emph{surprise} event, which, for the purposes of this paradox, is usually interpreted as
 the inability to predict what day a specific event takes place. As in existing work,
 the use of constructive logic allows us to represent knowledge as provability.
-However, unlike many previous formalizations, we define a system, parametrized
-by days of the week, where intuitive conclusions can be justified formally
-and without inconsistency.
-We are able to achieve this by making a nuanced observation about the
-formal statement regarding the uniqueness of the occurence of the event, as
-well as the informal meaning of surprise. We
-believe that this offers a satisfying resolution to the paradox.
-We also Coq-formalize an existing unsatisfactory interpretation of surprise
-and compare it to ours.
+However, unlike many previous formalizations, we define a system,
+where intuitive conclusions can be justified formally and without inconsistency.
+We are able to achieve this by making the observation that being surprised by
+an inevitable event requires there being strictly more than one possible day on which
+it can occur. We assert that this offers a satisfying resolution to the paradox, and
+speculate that it may generalize to notions of random choice in other situations.
+We also provide a formalization of an existing interpretation of surprise,
+and an analysis of how it compares it to ours.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -561,10 +557,16 @@ surprise examination, paradox, unexpected hanging, Coq, constructive logic.
 %
 % \hfill January 11, 2007
 
+%Specifically, a test is a surprise for a student if and only if the student
+%cannot deduce logically beforehand the date of the test. This interpretation was first proposed by Shaw
+
+
 The unexpected hanging paradox, also known as the surprise examination paradox,
-is a logical paradox introduced in the Mathematical Games column of a
-1963 issue of Scientific American \cite{american}. It describes the notion of a future event that
-is both certain, and not possible to predict the exact day of occurence of,
+is a logical paradox introduced in the the Mind philosophical journal in 1948 \cite{original},
+and introduced to the general public by the Scientific American Mathematical
+Games column author Martin Gardner, discussed in his work \cite{diversions}.
+It describes the notion of a future event that
+is both certain, and not possible to predict the exact day of occurrence of,
 formulated as follows :
 
 \begin{myindent}
@@ -594,33 +596,50 @@ Existing formalization efforts attempt to address questions like "how can we for
 define surprise?", "where is the flaw in the
 reasoning of the prisoner?" and "was it contradictory for the prisoner to have been
 hanged on Wednesday?". There is work on tackling these questions in multiple
-different branches of philosophy and mathmatics, most notably a logical approach and
-an epistemological one. It appears, however, that the majority of resolutions
+different branches of philosophy and mathematics.
+It appears, however, that the majority of resolutions
 of this paradox reach a conclusion espousing the impossibility of
 defining a consistent system with a coherent definition of surprise that is not
 self contradictory.
+An an extensive review of the existing approaches is given in \cite{extensivereview}.
 
-In the logical category, the approach most closely aligned with ours, where non-classical logic is used to
-tackle the problem, is described in \cite{}. There are a number of attempts preceding
-this one as well, \cite{} \cite{}. An epistemological approach \cite{}, while
-from a different area of philosophy, is able to support reasoning that follows
-a similar structure to the logical reasoning, which are compared in \cite{}.
+The definition of surprise as the inability to deduce beforehand the date of the test
+was first introduced in \cite{prediction}. A statistical approach to the problem
+of prediction in this context is discussed in \cite{statistical}.
+A proposed solution in the field of epistemology with the use of modal
+logic, is presented in \cite{modalepistemic}. A an approach involving
+Kripke semantics, employing the notion of persuasion, is in \cite{kripkemodal}.
 
-In the work on this paradox which precedes ours \cite{} \cite{}, the use of constructive logic is
-usually done via having a proof operator $\mathsf{Pr}$, which explicitly specifies
-that a proposition to which it is applied is a constructive statement. In our
-work, however, we assume the underlying logic to be constructive, and instead
-give formal proofs that certain propositions are classical.
+The use of non-classical logic,
+eg., appealing to Goedel's incompleteness, was first applied to the
+paradox in \cite{goedelized}, then in \cite{godelinconsistent}, and most recently
+in \cite{constructive}. The latter assumes the underlying logic to itself be
+constructive, as compared to reasoning via the provability operator $\mathsf{Pr}$ to indicate
+a possibly non-classical statement. This approach aligns most closely with ours.
+
+The work \cite{fourpossible} investigates the relation between the conclusions
+of the non-classical logic approaches and those from epistemology, as well
+as presenting four distinct approaches to formalizing the paradox, two of which
+we take as the starting point for this work.
+
+In this work, we take the point of view that the constraints of the paradox are
+fixed and correctly conveyed to the prisoner. The constraints, as we formalize them,
+are what is known to the prisoner on a specific day, eg. that he will be executed
+by the end of the week. Like previous works cited, we chose to represent
+\emph{knowledge} as constructive propositions. Whenever something is known to be
+true, it is provable. When it is false, its negation is provable. Double negation
+indicates that we cannot disprove a proposition, so we use this to indicate a
+possibility.
 
 Another distinction between existing work and our formalization is that
-we do not use modal or temporal logic (which is the approach in \cite{modal}).
+we do not use modal or temporal logic (which is the approach in \cite{modalepistemic}).
 Instead, we take advantage of the expressivity of the dependent typed logic of Coq directly to
 achieve the formalization of surprise at different points in time,
 by parametrizing the definition of the surprise proposition
 by the day about which the proposition of surprise is constructed.
 
 Because constructive logical is notoriously slippery, we chose to use a proof
-assistant to take a closer, more high-assurance look at the
+assistant (Coq, see \cite{coqmanual}) to take a closer, more high-assurance look at the
 interplay between the seemingly simple conditions of this conundrum.
 We also give an analysis of the relation of the informal meaning of surprise
 to its formalization.
@@ -633,7 +652,7 @@ The contributions of this paper are as follows :
   Section \ref{sec:universal} ;
   \item[(ii)] a definition (in Coq) of surprise from a previous work, with an analysis of it
   in Section \ref{sec:one} ;
-  \item[(iii)] a definition (in Coq) of surprise that we propose,
+  \item[(iii)] a novel definition (in Coq) of surprise that we propose,
   Section \ref{sec:two};
   \item[(ii)] a formally verified proof that a Friday hanging is not a surprise, Section \ref{sec:two};
   \item[(iii)] a formally verified proof that our definition of
@@ -643,10 +662,10 @@ The contributions of this paper are as follows :
   contradiction, Sections \ref{sec:two} \ref{sec:unique} \ref{sec:tgit} \ref{sec:friday};
 \end{itemize}
 
-For our code, see \cite{gitunexpect}.
+For our code, see \href{https://github.com/polinavino/unexpected_hanging/blob/master/unexpected_hanging.v}.
 
 Our definition of surprise on a day $td$ is formulated to reflect
-the following natural language statement : a hanging has not occured on or before the day $td$,
+the following natural language statement : a hanging has not occurred on or before the day $td$,
 and there exist at least two distinct future days on which a hanging
 is possible (ie. it is not possible to disprove that a hanging occurs on either
 of those days).
@@ -658,23 +677,25 @@ The crux of our paradox formalization analysis hinges on the observation that th
   is, in fact, never relevant to the formalization of the paradox --- neither in reasoning about
   any day with a possibility of future hanging (ie. on which
   a hanging has not yet happened), nor about a day on which it has already happened.
-  We go on to argue that the constraint that a hanging necessarily happens is
+  We go on to argue that the general constraint that a hanging necessarily happens is
    also contradictory to our definition of surprise. Moreover, the looser constraint
   from previous work,
   saying that we \emph{should not be able to disprove that a hanging happens on one of the
-  days} is insufficiently strong, and is implied by our definition. However, the intuitive conclusion normally draw from it
+  days} is insufficiently strong, and is implied by our definition.
+  However, the intuitive conclusion normally drawn from it
   (that if a hanging is only possible Friday, it must happen then)
-  is too strong.
+  is too strong, resulting in classical reasoning about surprise.
 
 
 \section{Coq and the Paradox}
 \label{sec:form}
 
-Coq is a proof assistant that offers a dependently typed formal language \cite{coq}.
+Coq is a proof assistant that offers a dependently typed formal language.
 It is capable of verifying formal user-defined proofs of propositions, as well as has support
 for automation of certain kinds of proofs. The choice of Coq, as opposed to another
-proof assistant such as Agda \cite{agda}, was based largely on the authors' familiarity with the system,
-as any dependently typed proof verifier would serve just as well for the purposes of this formalization.
+proof assistant such as Agda, was based largely on the authors' familiarity with the system,
+as any dependently typed proof verifier that supports constructive logic
+would serve just as well for the purposes of this formalization.
 
 To formalize the paradox, we need to reason about days of the week on which
 the paradox could happen, so we
@@ -717,7 +738,7 @@ in the paradox. We leave this function as a variable :
 
 We discuss the existence of such a predicate that
 works with in definition of surprise as part of future work.
-Next, we define a predicate that formalizes the notion that no hanging has occured
+Next, we define a predicate that formalizes the notion that no hanging has occurred
 yet (up to and including the parameter day {\tt td}, representing \emph{today}) :
 
 \begin{lstlisting}[mathescape=true]
@@ -744,12 +765,11 @@ being able to reason under the conditions of the past being defined, but
 would like to vary what "the past" refers to. Similarly, we parametrize the
 constraints of the paradox so that we are able to reason about
 whether we are still within them of at each point in the week,
-which is the level of detail in we are inrested in. This lets us, for example,
+which is the level of detail in we are interested in. This lets us, for example,
 reason about the impossibility of surprise on Thursday, see Section \ref{sec:tgit}.
 
 We now specify two conditions, implicit in the informal
-description of the paradox, that are shared across
-many formal interpretations including \cite{} \cite{},  and ones discussed here :
+description of the paradox :
 
 \begin{itemize}
   \item[(i)] if today is Friday, ie. the whole
@@ -758,7 +778,7 @@ many formal interpretations including \cite{} \cite{},  and ones discussed here 
     td = someWeekDay friday
       $\to$ $\exists$ d, hangingOnDay d
   \end{lstlisting}
-  \item[(ii)] if a hanging has occured, it is unique
+  \item[(ii)] if a hanging has occurred, it is unique
   \begin{lstlisting}[mathescape=true]
     ($\exists$ d, hangingOnDay d)
       $\to$ uniqueHanging dayBefore
@@ -818,7 +838,7 @@ the third one corresponds to "if today is not
   yet Friday, there is a possible day on which a hanging may happen", which
   we refer to as the {\tt onePossible} definition of surprise.
 
-This definition is one of the alternatives discussed in \cite{}. No inconsistency
+This definition is one of the alternatives discussed in \cite{fourpossible}. No inconsistency
 is introduced here, in fact, the hanging can still be a surprise even if it
 happens on a Friday! The intuition behind this is : if no hanging happened by
 Thursday, it is still only possible to prove {\tt $\neg~\neg$~hangingOnDay friday},
@@ -839,7 +859,7 @@ Let us consider what happens if we impose an additional constraint stating that,
 (i) there is a possible hanging day, and (ii) a hanging must be unique if it has
 happened, exactly one \emph{possible} hanging
 day implies that it \emph{necessarily happens} on that day. This is also explored in
-\cite{}, with a similar conclusion to the one we draw here. The following
+\cite{fourpossible}, with a similar conclusion to the one we draw here. The following
 proposition states that there is a possible hanging day, and that a possible
 unique day implies certainty of hanging on that day :
 
@@ -874,7 +894,7 @@ Note here that the inductive reasoning in which the prisoner engages to conclude
 hanging cannot ever be a surprise is, in some sense, superfluous --- we can use
 constructive logic reasoning to prove, without induction, that "if we can conclude
 from existence plus uniqueness of a possible hanging day, that it is certain on that day,
-\emph{our judgement about hanging occuring on any day must necessarily be classical}".
+\emph{our judgement about hanging occurring on any day must necessarily be classical}".
 The proof makes use of the fact that the equality comparison {\tt d = d'} is
 classical.
 
@@ -891,7 +911,7 @@ having at least one possible hanging day :
 \begin{itemize}
   \item[(i)] such a definition of surprise is not strong enough to allow us to conclude
   {\tt existsUniqueHappens}, in particular, that a hanging
-  must happen Friday given that it has not occured by Thursday, and is
+  must happen Friday given that it has not occurred by Thursday, and is
   therefore not a surprise in that case ; and \newline
   \item[(ii)] if we \emph{were} to be able to conclude {\tt existsUniqueHappens},
   reasoning about surprise
@@ -967,7 +987,7 @@ day before Thursday, since there are (for any day before Thursday) at least two 
 days about which we have no
 data contradicting the possibility of a hanging.
 Inductive reasoning in attempt to conclude that a Thursday hanging is
-predictable on Wednesday does not work because we do not have enough data on Wendesday
+predictable on Wednesday does not work because we do not have enough data on Wednesday
 to conclude whether a hanging will be Thursday or Friday. That is, to discount Friday
 as a possibility of surprise hanging, we \emph{need to know that there was no
 hanging Thursday}.
@@ -1026,7 +1046,7 @@ necessarily not unique. This seems wrong --- we would expect a hanging to be
 unique, it's implicit in the
 description of the paradox. Let us inspect this closer, however.
 Our conditions of this paradox on day $td$ are that either
-the week is over and the hanging has occured, or, for $td \neq thrusday, friday$ surprise is
+the week is over and the hanging has occurred, or, for $td \neq thrusday, friday$ surprise is
 only possible if the hanging has not yet happened. We not that
 
 Once a hanging occurs, we can no longer reason about it having been a surprise
@@ -1038,12 +1058,12 @@ This is perhaps the most paradoxical idea here. Any reasoning that includes
 in its hypotheses both that a hanging happened after {\tt td} and that it is a surprise
 (in our case, specified as {\tt twoPossible td}) is intuitively meaningless. This is not a
 formal statement, but rather a statement about what surprise means. You cannot
-be surprised by an event that has already occured.
+be surprised by an event that has already occurred.
 
-As a sidenote, this is a nuance of how we use language. One can reason about a surprising past
+As an aside, this is a nuance of how we use language. One can reason about a surprising past
 event from the perspective of a time prior to that event, but to do so,
 the available hypotheses must only include information known at that time, ie.
-not the occurence of that event. This is why statements such as "I was surprised
+not the occurrence of that event. This is why statements such as "I was surprised
 by a hanging when it happened", or "last week I was surprised when I found out
 that it had happened to my friend two weeks ago", make sense, and are usually
 what is meant when one says "I am surprised by a past hanging".
@@ -1097,7 +1117,7 @@ In both versions of the definition of surprise ({\tt twoPossiblePRDX} and
 part of the paradox definition.
 We exclude this day since Friday arriving means that the
 week has passed and there is no possible way for a hanging to occur. We also
-conclude that the hanging must have already occured.
+conclude that the hanging must have already occurred.
 
 \section{Conclusion and Future Work}
 
@@ -1118,7 +1138,7 @@ paradox only apply when surprise is intuitively not possible (ie. the end of the
 week or after the hanging), and we separate these out from the surprise specification.
 
 Finally, we formalize and compare two definitions of surprise. The first,
-{\tt onePossible}, has been exlored in prior work. We discuss why it has
+{\tt onePossible}, has been explored in prior work. We discuss why it has
 consequences contradictory to our intuition about the paradox, and attempts to
 rectify them in the intuitive way result in the
 exact undesirable conclusion that the prisoner makes in the paradox description.
@@ -1142,8 +1162,8 @@ function) holds for all days except Thursday,
 \begin{lstlisting}[mathescape=true]
   Proposition existsHangFunc :
     $\exists$ hangingOn, $\forall$ td,
-    twoPossiblePRDX_param
-      hangingOn td.
+    td $\neq$ (someWeekDay thursday) $\to$
+    twoPossiblePRDX_param hangingOn td.
 \end{lstlisting}
 
 would valuable in
@@ -1151,7 +1171,7 @@ establishing our formalization as the universally accepted one. Additionally,
 this paradox formalization could be further analyzed by way of considering its
 relationship to the axiom of choice. This is due to its (at least surface level)
 resemblance to the way the AC makes a connection between classical logic
-and a choice function \cite{} as well as arbitrary elements \cite{}.
+and a choice function \cite{accomp} as well as arbitrary elements \cite{randomness}.
 
 Another future direction we consider is generalizing the surprise hanging
 approach we propose to using constructive logic for describing and proving
@@ -1289,20 +1309,20 @@ elements in {\tt S}, such that $\neg~\neg~${\tt myPick s}.
 % http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
+\bibliography{hanging-bib}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
+% \begin{thebibliography}{1}
+%
+% \bibitem{IEEEhowto:kopka}
+% H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+%   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+%
+% \end{thebibliography}
 
 % biography section
 %
