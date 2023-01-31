@@ -1,0 +1,1350 @@
+
+%% bare_jrnl.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+%% see http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.7 or later) with an IEEE journal paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. IEEE's font choices can trigger bugs that do  ***
+% *** not appear when using other class files.                            ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE!
+%% User assumes all risk.
+%% In no event shall IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%
+%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
+%%                    bare_conf.tex, bare_jrnl.tex, bare_jrnl_compsoc.tex
+%%*************************************************************************
+
+% Note that the a4paper option is mainly intended so that authors in
+% countries using A4 can easily print to A4 and see how their papers will
+% look in print - the typesetting of the document will not typically be
+% affected with changes in paper size (but the bottom and side margins will).
+% Use the testflow package mentioned above to verify correct handling of
+% both paper sizes by the user's LaTeX system.
+%
+% Also note that the "draftcls" or "draftclsnofoot", not "draft", option
+% should be used if it is desired that the figures are to be displayed in
+% draft mode.
+%
+\documentclass[journal]{journal}
+%
+% If IEEEtran.cls has not been installed into the LaTeX system files,
+% manually specify the path to it like:
+% \documentclass[journal]{../sty/IEEEtran}
+
+\usepackage{changepage}
+
+\newenvironment{myindent}{\begin{adjustwidth}{1cm}{}}{\end{adjustwidth}}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+%
+%\usepackage{ifpdf}
+% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
+% compilation based on whether the output is pdf or dvi.
+% usage:
+% \ifpdf
+%   % pdf code
+% \else
+%   % dvi code
+% \fi
+% The latest version of ifpdf.sty can be obtained from:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/oberdiek/
+% Also, note that IEEEtran.cls V1.7 and later provides a builtin
+% \ifCLASSINFOpdf conditional that works the same way.
+% When switching from latex to pdflatex and vice-versa, the compiler may
+% have to be run twice to clear warning/error messages.
+
+
+
+
+
+
+% *** CITATION PACKAGES ***
+%
+%\usepackage{cite}
+% cite.sty was written by Donald Arseneau
+% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
+% \cite{} output to follow that of IEEE. Loading the cite package will
+% result in citation numbers being automatically sorted and properly
+% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
+% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
+% \cite will automatically add leading space, if needed. Use cite.sty's
+% noadjust option (cite.sty V3.8 and later) if you want to turn this off.
+% cite.sty is already installed on most LaTeX systems. Be sure and use
+% version 4.0 (2003-05-27) and later if using hyperref.sty. cite.sty does
+% not currently provide for hyperlinked citations.
+% The latest version can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/cite/
+% The documentation is contained in the cite.sty file itself.
+
+
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  % \usepackage[pdftex]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  % \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../eps/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.eps}
+\fi
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. graphicx.sty is already
+% installed on most LaTeX systems. The latest version and documentation can
+% be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/graphics/
+% Another good source of documentation is "Using Imported Graphics in
+% LaTeX2e" by Keith Reckdahl which can be found as epslatex.ps or
+% epslatex.pdf at: http://www.ctan.org/tex-archive/info/
+%
+% latex, and pdflatex in dvi mode, support graphics in encapsulated
+% postscript (.eps) format. pdflatex in pdf mode supports graphics
+% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
+% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
+% not a bitmapped formats (.jpeg, .png). IEEE frowns on bitmapped formats
+% which can result in "jaggedy"/blurry rendering of lines and letters as
+% well as large increases in file sizes.
+%
+% You can find documentation about the pdfTeX application at:
+% http://www.tug.org/applications/pdftex
+
+
+
+
+
+% *** MATH PACKAGES ***
+%
+%\usepackage[cmex10]{amsmath}
+% A popular package from the American Mathematical Society that provides
+% many useful and powerful commands for dealing with mathematics. If using
+% it, be sure to load this package with the cmex10 option to ensure that
+% only type 1 fonts will utilized at all point sizes. Without this option,
+% it is possible that some math symbols, particularly those within
+% footnotes, will be rendered in bitmap form which will result in a
+% document that can not be IEEE Xplore compliant!
+%
+% Also, note that the amsmath package sets \interdisplaylinepenalty to 10000
+% thus preventing page breaks from occurring within multiline equations. Use:
+%\interdisplaylinepenalty=2500
+% after loading amsmath to restore such page breaks as IEEEtran.cls normally
+% does. amsmath.sty is already installed on most LaTeX systems. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/amslatex/math/
+
+
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%
+%\usepackage{algorithmic}
+% algorithmic.sty was written by Peter Williams and Rogerio Brito.
+% This package provides an algorithmic environment fo describing algorithms.
+% You can use the algorithmic environment in-text or within a figure
+% environment to provide for a floating algorithm. Do NOT use the algorithm
+% floating environment provided by algorithm.sty (by the same authors) or
+% algorithm2e.sty (by Christophe Fiorio) as IEEE does not use dedicated
+% algorithm float types and packages that provide these will not provide
+% correct IEEE style captions. The latest version and documentation of
+% algorithmic.sty can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithms/
+% There is also a support site at:
+% http://algorithms.berlios.de/index.html
+% Also of interest may be the (relatively newer and more customizable)
+% algorithmicx.sty package by Szasz Janos:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithmicx/
+
+
+
+
+% *** ALIGNMENT PACKAGES ***
+%
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty patches and improves
+% the standard LaTeX2e array and tabular environments to provide better
+% appearance and additional user controls. As the default LaTeX2e table
+% generation code is lacking to the point of almost being broken with
+% respect to the quality of the end results, all users are strongly
+% advised to use an enhanced (at the very least that provided by array.sty)
+% set of table tools. array.sty is already installed on most systems. The
+% latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/tools/
+
+
+%\usepackage{mdwmath}
+%\usepackage{mdwtab}
+% Also highly recommended is Mark Wooding's extremely powerful MDW tools,
+% especially mdwmath.sty and mdwtab.sty which are used to format equations
+% and tables, respectively. The MDWtools set is already installed on most
+% LaTeX systems. The lastest version and documentation is available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/mdwtools/
+
+
+% IEEEtran contains the IEEEeqnarray family of commands that can be used to
+% generate multiline equations as well as matrices, tables, etc., of high
+% quality.
+
+
+%\usepackage{eqparbox}
+% Also of notable interest is Scott Pakin's eqparbox package for creating
+% (automatically sized) equal width boxes - aka "natural width parboxes".
+% Available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/eqparbox/
+
+
+
+
+
+% *** SUBFIGURE PACKAGES ***
+%\usepackage[tight,footnotesize]{subfigure}
+% subfigure.sty was written by Steven Douglas Cochran. This package makes it
+% easy to put subfigures in your figures. e.g., "Figure 1a and 1b". For IEEE
+% work, it is a good idea to load it with the tight package option to reduce
+% the amount of white space around the subfigures. subfigure.sty is already
+% installed on most LaTeX systems. The latest version and documentation can
+% be obtained at:
+% http://www.ctan.org/tex-archive/obsolete/macros/latex/contrib/subfigure/
+% subfigure.sty has been superceeded by subfig.sty.
+
+
+
+%\usepackage[caption=false]{caption}
+%\usepackage[font=footnotesize]{subfig}
+% subfig.sty, also written by Steven Douglas Cochran, is the modern
+% replacement for subfigure.sty. However, subfig.sty requires and
+% automatically loads Axel Sommerfeldt's caption.sty which will override
+% IEEEtran.cls handling of captions and this will result in nonIEEE style
+% figure/table captions. To prevent this problem, be sure and preload
+% caption.sty with its "caption=false" package option. This is will preserve
+% IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later
+% (recommended due to many improvements over 1.2) of subfig.sty supports
+% the caption=false option directly:
+%\usepackage[caption=false,font=footnotesize]{subfig}
+%
+% The latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/subfig/
+% The latest version and documentation of caption.sty can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
+
+
+
+
+% *** FLOAT PACKAGES ***
+%
+%\usepackage{fixltx2e}
+% fixltx2e, the successor to the earlier fix2col.sty, was written by
+% Frank Mittelbach and David Carlisle. This package corrects a few problems
+% in the LaTeX2e kernel, the most notable of which is that in current
+% LaTeX2e releases, the ordering of single and double column floats is not
+% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
+% single column figure to be placed prior to an earlier double column
+% figure. The latest version and documentation can be found at:
+% http://www.ctan.org/tex-archive/macros/latex/base/
+
+
+
+%\usepackage{stfloats}
+% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
+% the ability to do double column floats at the bottom of the page as well
+% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
+% LaTeX2e). It also provides a command:
+%\fnbelowfloat
+% to enable the placement of footnotes below bottom floats (the standard
+% LaTeX2e kernel puts them above bottom floats). This is an invasive package
+% which rewrites many portions of the LaTeX2e float routines. It may not work
+% with other packages that modify the LaTeX2e float routines. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/sttools/
+% Documentation is contained in the stfloats.sty comments as well as in the
+% presfull.pdf file. Do not use the stfloats baselinefloat ability as IEEE
+% does not allow \baselineskip to stretch. Authors submitting work to the
+% IEEE should note that IEEE rarely uses double column equations and
+% that authors should try to avoid such use. Do not be tempted to use the
+% cuted.sty or midfloat.sty packages (also by Sigitas Tolusis) as IEEE does
+% not format its papers in such ways.
+
+
+%\ifCLASSOPTIONcaptionsoff
+%  \usepackage[nomarkers]{endfloat}
+% \let\MYoriglatexcaption\caption
+% \renewcommand{\caption}[2][\relax]{\MYoriglatexcaption[#2]{#2}}
+%\fi
+% endfloat.sty was written by James Darrell McCauley and Jeff Goldberg.
+% This package may be useful when used in conjunction with IEEEtran.cls'
+% captionsoff option. Some IEEE journals/societies require that submissions
+% have lists of figures/tables at the end of the paper and that
+% figures/tables without any captions are placed on a page by themselves at
+% the end of the document. If needed, the draftcls IEEEtran class option or
+% \CLASSINPUTbaselinestretch interface can be used to increase the line
+% spacing as well. Be sure and use the nomarkers option of endfloat to
+% prevent endfloat from "marking" where the figures would have been placed
+% in the text. The two hack lines of code above are a slight modification of
+% that suggested by in the endfloat docs (section 8.3.1) to ensure that
+% the full captions always appear in the list of figures/tables - even if
+% the user used the short optional argument of \caption[]{}.
+% IEEE papers do not typically make use of \caption[]'s optional argument,
+% so this should not be an issue. A similar trick can be used to disable
+% captions of packages such as subfig.sty that lack options to turn off
+% the subcaptions:
+% For subfig.sty:
+% \let\MYorigsubfloat\subfloat
+% \renewcommand{\subfloat}[2][\relax]{\MYorigsubfloat[]{#2}}
+% For subfigure.sty:
+% \let\MYorigsubfigure\subfigure
+% \renewcommand{\subfigure}[2][\relax]{\MYorigsubfigure[]{#2}}
+% However, the above trick will not work if both optional arguments of
+% the \subfloat/subfig command are used. Furthermore, there needs to be a
+% description of each subfigure *somewhere* and endfloat does not add
+% subfigure captions to its list of figures. Thus, the best approach is to
+% avoid the use of subfigure captions (many IEEE journals avoid them anyway)
+% and instead reference/explain all the subfigures within the main caption.
+% The latest version of endfloat.sty and its documentation can obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/endfloat/
+%
+% The IEEEtran \ifCLASSOPTIONcaptionsoff conditional can also be used
+% later in the document, say, to conditionally put the References on a
+% page by themselves.
+
+
+
+
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+%\usepackage{url}
+% url.sty was written by Donald Arseneau. It provides better support for
+% handling and breaking URLs. url.sty is already installed on most LaTeX
+% systems. The latest version can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/misc/
+% Read the url.sty source comments for usage information. Basically,
+% \url{my_url_here}.
+
+
+
+
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+% (Unless specifically asked to do so by the journal or conference you plan
+% to submit to, of course. )
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\pagestyle{empty}
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Constructive Logic Approach to Solving the Unexpected Hanging Paradox}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+%
+
+\author{Michael~Shell,~\IEEEmembership{Member,~IEEE,}
+        John~Doe,~\IEEEmembership{Fellow,~OSA,}
+        and~Jane~Doe,~\IEEEmembership{Life~Fellow,~IEEE}}% <-this % stops a space
+
+% note the % following the last \IEEEmembership and also \thanks -
+% these prevent an unwanted space from occurring between the last author name
+% and the end of the author line. i.e., if you had this:
+%
+% \author{....lastname \thanks{...} \thanks{...} }
+%                     ^------------^------------^----Do not want these spaces!
+%
+% a space would be appended to the last name and could cause every name on that
+% line to be shifted left slightly. This is one of those "LaTeX things". For
+% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+% "AB" then you have to do: "\textbf{A}\textbf{B}"
+% \thanks is no different in this regard, so shield the last } of each \thanks
+% that ends a line with a % and do not let a space in before the next \thanks.
+% Spaces after \IEEEmembership other than the last one are OK (and needed) as
+% you are supposed to have spaces between the names. For what it is worth,
+% this is a minor point as most people would not even notice if the said evil
+% space somehow managed to creep in.
+
+
+
+% The paper headers
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~6, No.~1, January~2007}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Journals}
+% The only time the second header will appear is for the odd numbered pages
+% after the title page when using the twoside option.
+%
+% *** Note that you probably will NOT want to include the author's ***
+% *** name in the headers of peer review papers.                   ***
+% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
+% you desire.
+
+
+
+
+% If you want to put a publisher's ID mark on the page you can do it like
+% this:
+%\IEEEpubid{0000--0000/00\$00.00~\copyright~2007 IEEE}
+% Remember, if you use this you must call \IEEEpubidadjcol in the second
+% column for its text to clear the IEEEpubid mark.
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+\maketitle
+\thispagestyle{empty}
+
+
+\begin{abstract}
+In this work we define a novel approach to formally specifying the
+unexpected hanging paradox, sometimes called the surprise examination paradox, using a
+constructive logical framework. We build this formal specification using the
+Coq proof assistant.
+This paradox requires the formalization of the notion of
+a \emph{surprise} event, which, for the purposes of this paradox, is usually interpreted as
+the inability to predict what day a specific event takes place. As in existing work,
+the use of constructive logic allows us to represent knowledge as provability.
+However, unlike many previous formalizations, we define a system, parametrized
+by days of the week, where intuitive conclusions can be justified formally
+and without inconsistency.
+We are able to achieve this by making a nuanced observation about the
+formal statement regarding the uniqueness of the occurence of the event, as
+well as the informal meaning of surprise. We
+believe that this offers a satisfying resolution to the paradox.
+We also Coq-formalize an existing unsatisfactory interpretation of surprise
+and compare it to ours.
+\end{abstract}
+% IEEEtran.cls defaults to using nonbold math in the Abstract.
+% This preserves the distinction between vectors and scalars. However,
+% if the journal you are submitting to favors bold math in the abstract,
+% then you can use LaTeX's standard command \boldmath at the very start
+% of the abstract to achieve this. Many IEEE journals frown on math
+% in the abstract anyway.
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+surprise examination, paradox, unexpected hanging, Coq, constructive logic.
+\end{IEEEkeywords}
+
+
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+% The very first letter is a 2 line initial drop letter followed
+% by the rest of the first word in caps.
+%
+% form to use if the first word consists of a single letter:
+% \IEEEPARstart{A}{demo} file is ....
+%
+% form to use if you need the single drop letter followed by
+% normal text (unknown if ever used by IEEE):
+% \IEEEPARstart{A}{}demo file is ....
+%
+% Some journals put the first two words in caps:
+% \IEEEPARstart{T}{his demo} file is ....
+%
+% Here we have the typical use of a "T" for an initial drop letter
+% and "HIS" in caps to complete the first word.
+% \IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
+% for IEEE journal papers produced under \LaTeX\ using
+% IEEEtran.cls version 1.7 and later.
+% % You must have at least 2 lines in the paragraph with the drop letter
+% % (should never be an issue)
+% I wish you the best of success.
+%
+% \hfill mds
+%
+% \hfill January 11, 2007
+
+The unexpected hanging paradox, also known as the surprise examination paradox,
+is a logical paradox introduced in the Mathematical Games column of a
+1963 issue of Scientific American \cite{american}. It describes the notion of a future event that
+is both certain, and not possible to predict the exact day of occurence of,
+formulated as follows :
+
+\begin{myindent}
+  A judge tells a condemned prisoner that he will be hanged at noon on one weekday
+  in the following week but that the execution will be a surprise to the prisoner.
+  He will not know the day of the hanging until the executioner knocks on his cell door at noon that day.
+
+  Having reflected on his sentence, the prisoner draws the conclusion that he will
+  escape from the hanging. His reasoning is in several parts. He begins by concluding
+  that the "surprise hanging" can't be on Friday, as if he hasn't been hanged by
+  Thursday, there is only one day left – and so it won't be a surprise if he's hanged on
+  Friday. Since the judge's sentence stipulated that the hanging would be a surprise
+  to him, he concludes it cannot occur on Friday.
+
+  He then reasons that the surprise hanging cannot be on Thursday either, because
+  Friday has already been eliminated and if he hasn't been hanged by Wednesday noon,
+  the hanging must occur on Thursday, making a Thursday hanging not a surprise either.
+  By similar reasoning, he concludes that the hanging can also not occur on Wednesday,
+  Tuesday or Monday. Joyfully he retires to his cell confident that the hanging will
+  not occur at all.
+
+  The next week, the executioner knocks on the prisoner's door at noon on Wednesday –
+  which, despite all the above, was an utter surprise to him. Everything the judge said came true.
+\end{myindent}
+
+Existing formalization efforts attempt to address questions like "how can we formally
+define surprise?", "where is the flaw in the
+reasoning of the prisoner?" and "was it contradictory for the prisoner to have been
+hanged on Wednesday?". There is work on tackling these questions in multiple
+different branches of philosophy and mathmatics, most notably a logical approach and
+an epistemological one. It appears, however, that the majority of resolutions
+of this paradox reach a conclusion espousing the impossibility of
+defining a consistent system with a coherent definition of surprise that is not
+self contradictory.
+
+In the logical category, the approach most closely aligned with ours, where non-classical logic is used to
+tackle the problem, is described in \cite{}. There are a number of attempts preceding
+this one as well, \cite{} \cite{}. An epistemological approach \cite{}, while
+from a different area of philosophy, is able to support reasoning that follows
+a similar structure to the logical reasoning, which are compared in \cite{}.
+
+In the work on this paradox which precedes ours \cite{} \cite{}, the use of constructive logic is
+usually done via having a proof operator $\mathsf{Pr}$, which explicitly specifies
+that a proposition to which it is applied is a constructive statement. In our
+work, however, we assume the underlying logic to be constructive, and instead
+give formal proofs that certain propositions are classical.
+
+Another distinction between existing work and our formalization is that
+we do not use modal or temporal logic (which is the approach in \cite{modal}).
+Instead, we take advantage of the expressivity of the dependent typed logic of Coq directly to
+achieve the formalization of surprise at different points in time,
+by parametrizing the definition of the surprise proposition
+by the day about which the proposition of surprise is constructed.
+
+Because constructive logical is notoriously slippery, we chose to use a proof
+assistant to take a closer, more high-assurance look at the
+interplay between the seemingly simple conditions of this conundrum.
+We also give an analysis of the relation of the informal meaning of surprise
+to its formalization.
+
+The contributions of this paper are as follows :
+
+\begin{itemize}
+  \item[(i)] a formal specification (in Coq) of the types and conditions of the that
+  are shared among existing interpretations, using dependent types and constructive logic,
+  Section \ref{sec:universal} ;
+  \item[(ii)] a definition (in Coq) of surprise from a previous work, with an analysis of it
+  in Section \ref{sec:one} ;
+  \item[(iii)] a definition (in Coq) of surprise that we propose,
+  Section \ref{sec:two};
+  \item[(ii)] a formally verified proof that a Friday hanging is not a surprise, Section \ref{sec:two};
+  \item[(iii)] a formally verified proof that our definition of
+  surprise for this paradox is equivalent to the negation of the
+  constraint that the hanging happens on exactly one specific day, Section \ref{sec:unique};
+  \item[(iv)] an analysis of the unexpected hanging paradox offering a resolution without
+  contradiction, Sections \ref{sec:two} \ref{sec:unique} \ref{sec:tgit} \ref{sec:friday};
+\end{itemize}
+
+For our code, see \cite{gitunexpect}.
+
+Our definition of surprise on a day $td$ is formulated to reflect
+the following natural language statement : a hanging has not occured on or before the day $td$,
+and there exist at least two distinct future days on which a hanging
+is possible (ie. it is not possible to disprove that a hanging occurs on either
+of those days).
+We argue that this accurately represents a lack of certainty about the exact day of
+the hanging, but a certainty in its inevitability, and does not contradict
+the other constraints of the paradox.
+
+The crux of our paradox formalization analysis hinges on the observation that the uniqueness constraint
+  is, in fact, never relevant to the formalization of the paradox --- neither in reasoning about
+  any day with a possibility of future hanging (ie. on which
+  a hanging has not yet happened), nor about a day on which it has already happened.
+  We go on to argue that the constraint that a hanging necessarily happens is
+   also contradictory to our definition of surprise. Moreover, the looser constraint
+  from previous work,
+  saying that we \emph{should not be able to disprove that a hanging happens on one of the
+  days} is insufficiently strong, and is implied by our definition. However, the intuitive conclusion normally draw from it
+  (that if a hanging is only possible Friday, it must happen then)
+  is too strong.
+
+
+\section{Coq and the Paradox}
+\label{sec:form}
+
+Coq is a proof assistant that offers a dependently typed formal language \cite{coq}.
+It is capable of verifying formal user-defined proofs of propositions, as well as has support
+for automation of certain kinds of proofs. The choice of Coq, as opposed to another
+proof assistant such as Agda \cite{agda}, was based largely on the authors' familiarity with the system,
+as any dependently typed proof verifier would serve just as well for the purposes of this formalization.
+
+To formalize the paradox, we need to reason about days of the week on which
+the paradox could happen, so we
+begin by constructing a type {\tt weekDay} the terms of which are week days :
+
+\begin{lstlisting}
+  Inductive weekDay : Type :=
+    | monday : weekDay
+    | tuesday : weekDay
+    | wednesday : weekDay
+    | thursday : weekDay
+    | friday : weekDay.
+\end{lstlisting}
+
+We also define a type {\tt weekAndBefore}, which represents all the weekdays in
+the type above, plus the Sunday that comes before --- the purpose of this type is to
+represent all the days on which one can consider the possibility of surprise,
+differentiating it from the subset of days on which the hanging can occur. We
+also define the two comparison functions,
+
+\begin{lstlisting}
+  isBefore, isOnOrAfter (td : weekAndBefore) (d : weekDay) : Prop := ...
+\end{lstlisting}
+
+which compute whether a given {\tt td} is before (is on or after, respectively) {\tt d},
+following real-life weekday logic, eg. Sunday is before Monday.
+Both of these are classical comparisons, which we prove in our code.
+From here on, we use the notation $<$ for {\tt isBefore}, and
+$\geq$ for {\tt isOnOrAfter}.
+
+We do not know what day the hanging happens on, but we can specify the type of a
+function that, given a day of the week, returns $\mathsf{True}$ if we can prove the hanging
+happened, and $\mathsf{False}$ if we can prove it did not. We reason about this function
+in the presence of preconditions that are formal interpretations of those described
+in the paradox. We leave this function as a variable :
+
+\begin{lstlisting}[mathescape=true]
+  Variable hangingOnDay : weekDay $\to$ Prop.
+\end{lstlisting}
+
+We discuss the existence of such a predicate that
+works with in definition of surprise as part of future work.
+Next, we define a predicate that formalizes the notion that no hanging has occured
+yet (up to and including the parameter day {\tt td}, representing \emph{today}) :
+
+\begin{lstlisting}[mathescape=true]
+  Definition noHangingYet
+      (td : weekAndBefore) :=
+    $\forall$ d, td $\geq$ d
+    $\to$ $\neg $ hangingOnDay d.
+\end{lstlisting}
+
+This says that for any day {\tt d}, if it is before today {\tt td}, no hanging
+happened on {\tt d}.
+
+We use the double negation {\tt $\neg \neg$ hangingOnDay d} to formalize the statement that it is
+not possible to disprove that a hanging occurs on day {\tt d}. That is, a hanging
+is \emph{possible} on a given day.
+
+\section{Surprise parametrization and universal conditions}
+\label{sec:universal}
+
+Notice that the {\tt noHangingYet} function we introduced is actually a
+dependent proposition (a predicate), parametrized by
+the day {\tt td} that is \emph{today}. This is because we are interested in
+being able to reason under the conditions of the past being defined, but
+would like to vary what "the past" refers to. Similarly, we parametrize the
+constraints of the paradox so that we are able to reason about
+whether we are still within them of at each point in the week,
+which is the level of detail in we are inrested in. This lets us, for example,
+reason about the impossibility of surprise on Thursday, see Section \ref{sec:tgit}.
+
+We now specify two conditions, implicit in the informal
+description of the paradox, that are shared across
+many formal interpretations including \cite{} \cite{},  and ones discussed here :
+
+\begin{itemize}
+  \item[(i)] if today is Friday, ie. the whole
+  week has passed, we know that a hanging necessarily happened
+  \begin{lstlisting}[mathescape=true]
+    td = someWeekDay friday
+      $\to$ $\exists$ d, hangingOnDay d
+  \end{lstlisting}
+  \item[(ii)] if a hanging has occured, it is unique
+  \begin{lstlisting}[mathescape=true]
+    ($\exists$ d, hangingOnDay d)
+      $\to$ uniqueHanging dayBefore
+  \end{lstlisting}
+\end{itemize}
+
+where {\tt uniqueHanging} is a predicate formalizing that after a given day {\tt td},
+there can be at most one day on which a hanging occurs, and thus,
+{\tt uniqueHanging dayBefore} states this about the entire week.
+
+\begin{lstlisting}[mathescape=true]
+  Definition uniqueHanging
+      (td : weekAndBefore) :
+    $\forall$ d d',
+    td $<$ d $\wedge$ td $<$ d',
+    hangingOnDay d $\to$
+    hangingOnDay d' $\to$
+    d = d'.
+\end{lstlisting}
+
+We note here that the preconditions in both implications are such that if
+they are satisfied, intuitively surprise should not be possible : (i)
+requires that the week is already over, and (ii) requires that a hanging
+has happened. The time at which we may be surprised by a hanging is strictly
+before it happens and before the week is over, so neither of these should
+actually play any role in the reasoning about surprise, which is reflected
+in our upcoming definition of surprise. However, (i) and (ii) together express all the
+other constraints of the paradox besides the one requiring the hanging to
+be a surprise (now we just need to add that part!).
+
+Surprise requires that a future hanging be possible - on more than zero
+of the remaining weekdays after today.
+So, the constraint that at least one future possible hanging day exists is
+clearly necessary. However, the case for at least one possible day not
+being sufficient to define surprise is a bit more nuanced.
+
+\section{At least one possible day}.
+\label{sec:one}
+
+We specify this interpretation
+of the conditions of the paradox for each possible day as:
+
+\begin{lstlisting}[mathescape=true]
+  Definition onePossiblePRDX (td : weekAndBefore)  :=
+    (td = someWeekDay friday
+      $\to$ $\exists$ d, hangingOnDay d)
+    $\wedge$
+    (($\exists$ d, hangingOnDay d)
+      $\to$ uniqueHanging dayBefore)
+    $\wedge$
+    (td $<$ friday $\wedge$ noHangingYet td) ->
+      exists d, td $<$ d $\wedge$ $\neg~\neg~$ hangingOnDay d).
+\end{lstlisting}
+
+where the first two conjuncts are as described above, and
+the third one corresponds to "if today is not
+  yet Friday, there is a possible day on which a hanging may happen", which
+  we refer to as the {\tt onePossible} definition of surprise.
+
+This definition is one of the alternatives discussed in \cite{}. No inconsistency
+is introduced here, in fact, the hanging can still be a surprise even if it
+happens on a Friday! The intuition behind this is : if no hanging happened by
+Thursday, it is still only possible to prove {\tt $\neg~\neg$~hangingOnDay friday},
+from which we are not able to deduce that {\tt hangingOnDay friday}.
+
+Note here that including the constraint that \emph{a hanging must happen
+by the end of the week} is still not sufficient to conclude certainty
+from unique possibility. The reason for this is that the conclusion that
+a hanging definitely happened on one of the week days can only be made
+after Friday has come. The possibility of surprise, meanwhile, has the
+precondition that the whole week has not passed yet (ie. Friday has not yet come).
+These preconditions are mutually exclusive.
+
+The condition that if a hanging has happened, it must be unique, also does not
+give us any reasoning power, as we are not able to conclude {\tt hangingOnDay friday}.
+
+Let us consider what happens if we impose an additional constraint stating that, assuming that
+(i) there is a possible hanging day, and (ii) a hanging must be unique if it has
+happened, exactly one \emph{possible} hanging
+day implies that it \emph{necessarily happens} on that day. This is also explored in
+\cite{}, with a similar conclusion to the one we draw here. The following
+proposition states that there is a possible hanging day, and that a possible
+unique day implies certainty of hanging on that day :
+
+\begin{lstlisting}[mathescape=true]
+  Definition existsUniqueHappens :=
+    $\exists$ d, ($\neg~\neg$ hangingOnDay d
+    $\wedge$
+    ($\forall$ d',
+      $\neg~\neg$ hangingOnDay d
+      $\to$ $\neg~\neg$ hangingOnDay d'
+      $\to$ d = d') $\to$
+      (hangingOnDay d)).
+\end{lstlisting}
+
+Now, the following statement expresses that {\tt existsUniqueHappens} lets us
+conclude that {\tt hangingOnDay} must then be classical (the proof is in the
+associated code) :
+
+\begin{lstlisting}[mathescape=true]
+  Lemma euhImpClassical :
+    (uniqueHanging dayBefore) $\to$
+    (exists d, ~~ hangingOnDay d) $\to$
+    existsUniqueHappens $\to$
+    ($\forall$ d,
+    $\neg~$ hangingOnDay d $\vee$ hangingOnDay d).
+\end{lstlisting}
+
+This proposition, without justification, is the crux of the reasoning the prisoner
+uses to informally to arrive at the judgement that
+if a hanging hasn't happened by Thursday, it must happen on Friday.
+Note here that the inductive reasoning in which the prisoner engages to conclude that the
+hanging cannot ever be a surprise is, in some sense, superfluous --- we can use
+constructive logic reasoning to prove, without induction, that "if we can conclude
+from existence plus uniqueness of a possible hanging day, that it is certain on that day,
+\emph{our judgement about hanging occuring on any day must necessarily be classical}".
+The proof makes use of the fact that the equality comparison {\tt d = d'} is
+classical.
+
+The intuition seems to be correct in making the assumption that a unique possibility
+implies certainty, and the logic leading to this inconsistency with the informal
+definition appears solid.
+However, we will see that the problem lies in the attempt
+to allow the possibility of, and draw conclusions from, having a \emph{unique possible }
+hanging day.
+
+This definition leaves us with the following conclusions about defining surprise as
+having at least one possible hanging day :
+
+\begin{itemize}
+  \item[(i)] such a definition of surprise is not strong enough to allow us to conclude
+  {\tt existsUniqueHappens}, in particular, that a hanging
+  must happen Friday given that it has not occured by Thursday, and is
+  therefore not a surprise in that case ; and \newline
+  \item[(ii)] if we \emph{were} to be able to conclude {\tt existsUniqueHappens},
+  reasoning about surprise
+  becomes classical, so we can always figure out the hanging day in advance.
+\end{itemize}
+
+Both possibilities appear problematic : (i) does not allow us to make
+a conclusion that we would like make,
+and (ii) does not support reasoning non-classically, which removes any ambiguity
+about the future hanging day, and therefore, the possibility of surprise.
+Let us see why adding a different additional constraint (ie. other than deriving
+certainty from a unique possibility) will help.
+
+\section{Full paradox : at least two possible days}.
+\label{sec:two}
+
+The way we propose to strengthen the conditions of surprise is by increasing
+the number of possible days required for surprise to two :
+
+\begin{lstlisting}[mathescape=true]
+  Definition twoPossible
+      (td : weekAndBefore) :=
+    $\exists$ d d', d $\neq$ d'
+    $\wedge$ $\neg \neg$ hangingOnDay d
+    $\wedge$ $\neg \neg$ hangingOnDay d'
+    $\wedge$ td $<$ d $\wedge$ td $<$ d'.
+\end{lstlisting}
+
+We can read this as follows :
+
+\begin{myindent}
+  There exist two distinct days after the day {\tt td} such that
+  a hanging is possible (ie. cannot disprove that it happens then)
+\end{myindent}
+
+Intuitively, this constraint makes sense --- if I am not sure what day something
+will occur, there must be at least two possible future days on which it could occur,
+as expressed in {\tt twoPossible}.
+To formulate the complete conditions of the paradox for each day, we formalize that, in addition
+to the two constraints justified earlier, we include the constraint that
+"if today is before Friday, and no hanging has yet happened, there are at least
+two possible distinct hanging days in the future" :
+
+\begin{lstlisting}[mathescape=true]
+  Definition twoPossiblePRDX
+      (td : weekAndBefore)  :=
+    (td = someWeekDay friday
+      $\to$ $\exists$ d, hangingOnDay d)
+    $\wedge$
+    (($\exists$ d, hangingOnDay d)
+      $\to$ uniqueHanging dayBefore)
+    $\wedge$
+    (td $<$ friday $\wedge$ noHangingYet td) ->
+      twoPossible td.
+\end{lstlisting}
+
+Now, the first thing we can formally conclude about this definition is that it indeed rules out
+a Friday hanging. The following lemma says that it is not possible that by Thursday,
+no hanging has happened, but there are still two distinct possible days for it to
+happen in the future.
+
+\begin{lstlisting}[mathescape=true]
+  Lemma cantBeSurpFriday :
+    twoPossiblePRDX (someWeekDay thursday)
+    $\to$ False.
+\end{lstlisting}
+
+The proof (see code) is trivial, since there is only one day (Friday) left in the week,
+and no hangings are possible on past days.
+
+This reasoning does not work, however, for any
+day before Thursday, since there are (for any day before Thursday) at least two future
+days about which we have no
+data contradicting the possibility of a hanging.
+Inductive reasoning in attempt to conclude that a Thursday hanging is
+predictable on Wednesday does not work because we do not have enough data on Wendesday
+to conclude whether a hanging will be Thursday or Friday. That is, to discount Friday
+as a possibility of surprise hanging, we \emph{need to know that there was no
+hanging Thursday}.
+
+So, this definition of surprise aligns with our intuition by making surprise
+by a Friday hanging possible, but does not appear to contradict the possibility
+on any other day. It has, however, an unintuitive feature.
+
+\section{Negation of uniqueness. }
+\label{sec:unique}
+
+With this definition of surprise, surprise is never possible when there is
+exactly one possible hanging day. The constraint, {\tt uniqueHanging}, that
+a (provable) hanging day is unique is, in fact, equivalent to the constraint
+that the (possible) hanging day must be unique,
+
+\begin{lstlisting}[mathescape=true]
+  Definition uniqueMaybe
+      (td : weekAndBefore) :
+    $\forall$ d d',
+    td $<$ d $\wedge$ td $<$ d',
+    $\neg~\neg$ hangingOnDay d $\to$
+    $\neg~\neg$ hangingOnDay d' $\to$
+    d = d'.
+\end{lstlisting}
+
+We parametrize the above propositions by $td$ to express that they apply to
+a specific subset of the week days --- those days that are after today,
+eg., {\tt uniqueMaybe dayBefore} specifies that if a hanging is provable to be
+on \emph{any two weekdays}, those days must be the same.
+We prove that they the two propositions are equivalent :
+
+\begin{lstlisting}[mathescape=true]
+  Lemma uniqueMaybeEqv
+      (td : weekAndBefore) :
+    uniqueHanging td
+    $\leftrightarrow$
+    uniqueMaybe td.
+\end{lstlisting}
+
+The proof of this relies on, again, the fact that $d = d'$ is a classical
+comparison. Moreover, the {\tt twoPossible} constraint
+in our definition of surprise \emph{is the negation of} {\tt uniqueHanging}
+(and therefore also {\tt uniqueMaybe}) :
+
+\begin{lstlisting}[mathescape=true]
+  Lemma twoNotUnique :
+    $\forall$ td,
+    $\neg$ uniqueHanging td
+    $\leftrightarrow$
+    twoPossible td.
+\end{lstlisting}
+
+We make an observations about this : a future possible day of the hanging is
+necessarily not unique. This seems wrong --- we would expect a hanging to be
+unique, it's implicit in the
+description of the paradox. Let us inspect this closer, however.
+Our conditions of this paradox on day $td$ are that either
+the week is over and the hanging has occured, or, for $td \neq thrusday, friday$ surprise is
+only possible if the hanging has not yet happened. We not that
+
+Once a hanging occurs, we can no longer reason about it having been a surprise
+That is, a judgement of surprise can only made about
+an event in the context of a lack of information about it (in this case,
+whether a hanging will happen on a specific future day).
+
+This is perhaps the most paradoxical idea here. Any reasoning that includes
+in its hypotheses both that a hanging happened after {\tt td} and that it is a surprise
+(in our case, specified as {\tt twoPossible td}) is intuitively meaningless. This is not a
+formal statement, but rather a statement about what surprise means. You cannot
+be surprised by an event that has already occured.
+
+As a sidenote, this is a nuance of how we use language. One can reason about a surprising past
+event from the perspective of a time prior to that event, but to do so,
+the available hypotheses must only include information known at that time, ie.
+not the occurence of that event. This is why statements such as "I was surprised
+by a hanging when it happened", or "last week I was surprised when I found out
+that it had happened to my friend two weeks ago", make sense, and are usually
+what is meant when one says "I am surprised by a past hanging".
+
+Now, back to why it is ok for hanging day to not to be required to be unique
+before the hanging occurs : once the (first) hanging
+occurs on some {\tt d}, we now have {\tt $\neg~$ noHangingYet (someWeekDay d)}.
+That means that the {\tt twoPossible (someWeekDay d)} implication of {\tt noHangingYet (someWeekDay d)}
+is no longer required to hold, and also that {\tt exists d, hangingOnDay d}, so
+its consequence {\tt uniqueHanging dayBefore} is now required to hold.
+So, uniqueness constraint "kicks in" after the hanging first happens.
+
+\section{TGI Thursday}
+\label{sec:tgit}
+
+With this definition of the paradox, surprise is already not possible on Thursday.
+The reason for this is not that the definition allows us to conclude that a hanging will
+definitely happen on Friday once we get to Thursday. Rather, it is that the
+conditions for surprise are not satisfied on Thursday in another way (a missing
+a possible day).
+
+We have already discussed that, since the definition
+is parametrized by the day on which we judge whether the paradox conditions
+are met, surprise (and all other conditions of the paradox) actually form
+a different proposition for each day. And so, an impossibility of surprise
+Thursday does not affect what we can prove about the rest of the days.
+With that in mind, we can choose to make a special case
+for the paradox characterization, which only applies when exactly one day remains as a possibility
+for a hanging --- and there is only one such day, Thursday.
+
+The special case to add is exactly the conclusion we rejected in the {\tt onePossible}
+version of surprise : {\tt existsUniqueHappens}. Note here that
+the difference between one- and two-possible versions of surprise, with respect
+to adding this constraint,
+is that in the two-case, we use the paradox definition to conclude that Thursday
+does not allow surprise. In the one-case, on the other hand, we \emph{rely} on the reasoning in
+{\tt existsUniqueHappens} to conclude surprise is not possible on Thursday,
+which leads an unsavoury conclusion.
+
+We do not add it, after all, even though the reasoning it allows us to do
+appears coherent. The reason for this is that the preconditions of this
+constraint already conflict with those of the {\tt twoPossible} surprise definition, as well
+as with the preconditions of the universal paradox constraints. So, it does not
+add additional reasoning power to our definition.
+
+\section{The week is done }
+\label{sec:friday}
+
+In both versions of the definition of surprise ({\tt twoPossiblePRDX} and
+{\tt onePossiblePRDX}), Friday is explicitly excluded from the surprise
+part of the paradox definition.
+We exclude this day since Friday arriving means that the
+week has passed and there is no possible way for a hanging to occur. We also
+conclude that the hanging must have already occured.
+
+\section{Conclusion and Future Work}
+
+We have presented a formalization of the unexpected hanging paradox that appears to capture the
+conditions of the paradox, meanwhile both aligning with the
+intuition about Friday, and not reasoning ourselves out of the hanging entirely.
+We formalized this definition, along with some related proofs, in the Coq
+proof assistant.
+A few key ideas were needed to achieve this.
+
+The starting point was the observation that constructive logic
+is required to represent knowledge in order to allow for the possibility that we
+may not know something to be either true or false --- such as whether a hanging
+occured on a given day. Next, we observe that surprise is a different notion
+on each of the days, so our definition is parametrized by the day on which
+we reason about its possibility. Then, we notice that the universal conditions of the
+paradox only apply when surprise is intuitively not possible (ie. the end of the
+week or after the hanging), and we separate these out from the surprise specification.
+
+Finally, we formalize and compare two definitions of surprise. The first,
+{\tt onePossible}, has been exlored in prior work. We discuss why it has
+consequences contradictory to our intuition about the paradox, and attempts to
+rectify them in the intuitive way result in the
+exact undesirable conclusion that the prisoner makes in the paradox description.
+The second is {\tt twoPossible}, which we proposed, and it is a strengthening of
+the first definition that does not cause the reasoning about the future hanging to
+become classical (unlike {\tt onePossible}).
+
+The surprise formalization we propose drops (in fact, negates) the constraint
+guaranteeing the uniqueness of the future hanging. The subtlety here is in the idea that the
+constraint still applies \emph{once the hanging happens}, but multiple
+distinct days for a future hanging are still required up until then.
+Our Coq formalization of the paradox stands out from existing work in (i)
+its mechanization of the problem (ii) providing a resolution to the paradox that aligns with
+intuition (iii) leading us to making new subtle observations about the
+constraints of the problem and how they are hidden by language.
+
+As part of future work, a proof of the existence of {\tt hangingOnDay}, such that
+a version of {\tt twoPossiblePRDX td} (parametrized by the hanging decision
+function) holds for all days except Thursday,
+
+\begin{lstlisting}[mathescape=true]
+  Proposition existsHangFunc :
+    $\exists$ hangingOn, $\forall$ td,
+    twoPossiblePRDX_param
+      hangingOn td.
+\end{lstlisting}
+
+would valuable in
+establishing our formalization as the universally accepted one. Additionally,
+this paradox formalization could be further analyzed by way of considering its
+relationship to the axiom of choice. This is due to its (at least surface level)
+resemblance to the way the AC makes a connection between classical logic
+and a choice function \cite{} as well as arbitrary elements \cite{}.
+
+Another future direction we consider is generalizing the surprise hanging
+approach we propose to using constructive logic for describing and proving
+the existence of a function {\tt myPick}
+which represents choosing an arbitrary value from a decidable set. In particular,
+given a decidable set {\tt W}, \newline
+
+\begin{myindent}
+For any subset {\tt S $\subseteq$ W} of cardinality at least 2, such that for all
+{\tt s $\in$ W - S}, $\neg ${\tt myPick s}, there exist at least two distinct
+elements in {\tt S}, such that $\neg~\neg~${\tt myPick s}.
+\end{myindent}
+
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex,
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command, the
+% \label for the overall figure must come after \caption.
+% \hfil must be used as a separator to get equal spacing.
+% The subfigure.sty package works much the same way, except \subfigure is
+% used instead of \subfloat.
+%
+%\begin{figure*}[!t]
+%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%\label{fig_second_case}}}
+%\caption{Simulation results}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+
+
+% An example of a floating table. Note that, for IEEE style tables, the
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+% Note that IEEE does not put floats in the very first column - or typically
+% anywhere on the first page for that matter. Also, in-text middle ("here")
+% positioning is not used. Most IEEE journals use top floats exclusively.
+% Note that, LaTeX2e, unlike IEEE journals, places footnotes above bottom
+% floats. This can be corrected via the \fnbelowfloat command of the
+% stfloats package.
+
+
+
+
+% if have a single appendix:
+%\appendix[Proof of the Zonklar Equations]
+% or
+%\appendix  % for no appendix heading
+% do not use \section anymore after \appendix, only \section*
+% is possibly needed
+
+% use appendices with more than one appendix
+% then use \section to start each appendix
+% you must declare a \section before using any
+% \subsection or using \label (\appendices by itself
+% starts a section numbered zero.)
+%
+
+
+% Can use something like this to put references on a page
+% by themselves when using endfloat and the captionsoff option.
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+\begin{thebibliography}{1}
+
+\bibitem{IEEEhowto:kopka}
+H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+
+\end{thebibliography}
+
+% biography section
+%
+% If you have an EPS/PDF photo (graphicx package needed) extra braces are
+% needed around the contents of the optional argument to biography to prevent
+% the LaTeX parser from getting confused when it sees the complicated
+% \includegraphics command within an optional argument. (You could create
+% your own custom macro containing the \includegraphics command to make things
+% simpler here.)
+%\begin{biography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
+% or if you just want to reserve a space for a photo:
+%
+% \begin{IEEEbiography}{Michael Shell}
+% Biography text here.
+% \end{IEEEbiography}
+%
+% % if you will not have a photo at all:
+% \begin{IEEEbiographynophoto}{John Doe}
+% Biography text here.
+% \end{IEEEbiographynophoto}
+%
+% % insert where needed to balance the two columns on the last page with
+% % biographies
+% %\newpage
+%
+% \begin{IEEEbiographynophoto}{Jane Doe}
+% Biography text here.
+% \end{IEEEbiographynophoto}
+
+% You can push biographies down or up by placing
+% a \vfill before or after them. The appropriate
+% use of \vfill depends on what kind of text is
+% on the last page and whether or not the columns
+% are being equalized.
+
+%\vfill
+
+% Can be used to pull up biographies so that the bottom of the last one
+% is flush with the other column.
+%\enlargethispage{-5in}
+
+
+
+% that's all folks
+\end{document}
