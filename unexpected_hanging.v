@@ -215,8 +215,7 @@ Proof.
   destruct d, x; intuition discriminate.
 Qed.
 
-(* if the hanging happens on day d, it does not happen on any other day *)
-Definition only_one_hanging_prop := forall d d' : weekDay, (hangingOnDay d /\ hangingOnDay d') -> d = d'.
+
   Definition uniqueHanging
       (td : weekAndBefore) :=
     forall d d',
@@ -354,9 +353,63 @@ Proof.
   unfold twoPossible; unfold uniqueHanging; intros.
   intro. destruct H. destruct H. destruct H.
   generalize (H0 x x0). tauto.
-Qed. 
+Qed.
 
 (* test stuff *)
+
+
+  Definition uniqueHanging_param
+      (hangingOn : weekDay -> Prop)
+      (td : weekAndBefore) :=
+    forall d d',
+    isBefore td d /\ isBefore td d' ->
+    hangingOnDay d ->
+    hangingOnDay d' ->
+    d = d'.
+
+Definition noHangingYet_param
+  (td : weekAndBefore)
+      (hangingOn : weekDay -> Prop)
+   := forall d, isOnOrAfter td d -> ~ hangingOnDay d.
+
+  Definition twoPossible_param
+      (td : weekAndBefore) 
+      (hangingOn : weekDay -> Prop) :=
+    exists d d', d <> d'
+    /\ ~~ hangingOnDay d
+    /\ ~~ hangingOnDay d'
+    /\ isBefore td d /\ isBefore td d'.
+
+
+
+  Definition twoPossiblePRDX_param
+      (td : weekAndBefore)  
+      (hangingOn : weekDay -> Prop):=
+    (td = someWeekDay friday
+      -> exists d, hangingOn d)
+    /\
+    ((exists d, hangingOn d)
+      -> uniqueHanging dayBefore)
+    /\
+    ((isBefore td friday /\ noHangingYet td) ->
+      twoPossible td).
+
+  Proposition existsHangFunc :=
+    exists hangingOn, forall td,
+    td <> (someWeekDay thursday) ->
+    twoPossiblePRDX_param td hangingOn.
+
+
+Fixpoint hangFunct 
+
+
+
+
+
+
+
+
+
 
 
   Lemma cantBeSurpT :
