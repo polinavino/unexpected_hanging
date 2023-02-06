@@ -796,9 +796,9 @@ there can be at most one day on which a hanging occurs, and thus,
 
 \begin{lstlisting}[mathescape=true]
   Definition uniqueHanging
-      (td : weekAndBefore) :
+      (td : weekAndBefore) :=
     $\forall$ d d',
-    td $<$ d $\wedge$ td $<$ d',
+    td $<$ d $\wedge$ td $<$ d' $\to$
     hangingOnDay d $\to$
     hangingOnDay d' $\to$
     d = d'.
@@ -834,7 +834,7 @@ of the conditions of the paradox for each possible day as:
     (($\exists$ d, hangingOnDay d)
       $\to$ uniqueHanging dayBefore)
     $\wedge$
-    (td $<$ friday $\wedge$ noHangingYet td) ->
+    ((td $<$ friday $\wedge$ noHangingYet td) ->
       exists d, td $<$ d $\wedge$ $\neg~\neg~$ hangingOnDay d).
 \end{lstlisting}
 
@@ -860,23 +860,23 @@ These preconditions are mutually exclusive.
 The condition that if a hanging has happened, it must be unique, also does not
 give us any reasoning power, as we are not able to conclude {\tt hangingOnDay friday}.
 
-Let us consider what happens if we impose an additional constraint stating that, assuming that
-(i) there is a possible hanging day, and (ii) a hanging must be unique if it has
-happened, exactly one \emph{possible} hanging
-day implies that it \emph{necessarily happens} on that day. This is also explored in
+Let us consider what happens if we impose an additional constraint stating that
+exactly one \emph{possible} hanging
+day implies that it \emph{provably happens} on a specific day. This is also explored in
 \cite{fourpossible}, with a similar conclusion to the one we draw here. The following
 proposition states that there is a possible hanging day, and that a possible
 unique day implies certainty of hanging on that day :
 
 \begin{lstlisting}[mathescape=true]
   Definition existsUniqueHappens :=
-    $\exists$ d, ($\neg~\neg$ hangingOnDay d
+    ($\exists$ d, $\neg~\neg$ hangingOnDay d)
     $\wedge$
     ($\forall$ d',
       $\neg~\neg$ hangingOnDay d
       $\to$ $\neg~\neg$ hangingOnDay d'
-      $\to$ d = d') $\to$
-      (hangingOnDay d)).
+      $\to$ d = d')
+    $\to$
+    $\exists$ d, hangingOnDay d.
 \end{lstlisting}
 
 Now, the following statement expresses that {\tt existsUniqueHappens} lets us
@@ -969,8 +969,8 @@ two possible distinct hanging days in the future" :
     (($\exists$ d, hangingOnDay d)
       $\to$ uniqueHanging dayBefore)
     $\wedge$
-    (td $<$ friday $\wedge$ noHangingYet td) ->
-      twoPossible td.
+    ((td $<$ friday $\wedge$ noHangingYet td) ->
+      twoPossible td).
 \end{lstlisting}
 
 Now, the first thing we can formally conclude about this definition is that it indeed rules out
@@ -981,6 +981,7 @@ happen in the future.
 \begin{lstlisting}[mathescape=true]
   Lemma cantBeSurpFriday :
     twoPossiblePRDX (someWeekDay thursday)
+    $\to$ noHangingYet (someWeekDay thursday)
     $\to$ False.
 \end{lstlisting}
 
@@ -1011,9 +1012,9 @@ that the (possible) hanging day must be unique,
 
 \begin{lstlisting}[mathescape=true]
   Definition uniqueMaybe
-      (td : weekAndBefore) :
+      (td : weekAndBefore) :=
     $\forall$ d d',
-    td $<$ d $\wedge$ td $<$ d',
+    td $<$ d $\wedge$ td $<$ d' $\to$
     $\neg~\neg$ hangingOnDay d $\to$
     $\neg~\neg$ hangingOnDay d' $\to$
     d = d'.
@@ -1035,15 +1036,14 @@ We prove that they the two propositions are equivalent :
 
 The proof of this relies on, again, the fact that $d = d'$ is a classical
 comparison. Moreover, the {\tt twoPossible} constraint
-in our definition of surprise \emph{is the negation of} {\tt uniqueHanging}
+in our definition of surprise \emph{implies the negation of} {\tt uniqueHanging}
 (and therefore also {\tt uniqueMaybe}) :
 
 \begin{lstlisting}[mathescape=true]
   Lemma twoNotUnique :
     $\forall$ td,
-    $\neg$ uniqueHanging td
-    $\leftrightarrow$
-    twoPossible td.
+    twoPossible td $\to$
+    $\neg$ uniqueHanging td.
 \end{lstlisting}
 
 We make an observations about this : a future possible day of the hanging is

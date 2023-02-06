@@ -217,17 +217,195 @@ Qed.
 
 (* if the hanging happens on day d, it does not happen on any other day *)
 Definition only_one_hanging_prop := forall d d' : weekDay, (hangingOnDay d /\ hangingOnDay d') -> d = d'.
-
-(* if the hanging happens on day d, it does not happen on any other day *)
-Definition only_one_hanging_IF_HAPPENED := (exists d, (hangingOnDay d)) -> forall d d', (hangingOnDay d) -> (forall d' : weekDay, (hangingOnDay d') -> (d = d')).
-
-(* this predicate is provable if for days up to and including today, we can prove whether the 
-hanging did or did not occur *)
-Definition knowPast (td : weekAndBefore) := forall d, isOnOrAfter td d -> hangingOnDay d \/ ~ hangingOnDay d.
+  Definition uniqueHanging
+      (td : weekAndBefore) :=
+    forall d d',
+    isBefore td d /\ isBefore td d' ->
+    hangingOnDay d ->
+    hangingOnDay d' ->
+    d = d'.
 
 (* no hanging has occured up to today if we can prove that there is no day on or before today
 such that a hanging is provable that day *)
+(*   Definition noHangingYet
+      (td : weekAndBefore) :=
+    $\forall$ d, td $\geq$ d
+    $\to$ $\neg $ hangingOnDay d. *)
 Definition noHangingYet (td : weekAndBefore) := forall d, isOnOrAfter td d -> ~ hangingOnDay d.
+
+
+  Definition onePossiblePRDX (td : weekAndBefore)  :=
+    (td = someWeekDay friday
+      -> exists d, hangingOnDay d)
+    /\
+    ((exists d, hangingOnDay d)
+      -> uniqueHanging dayBefore)
+    /\
+    ((isBefore td friday /\ noHangingYet td) ->
+      exists d, isBefore td d /\ ~~ hangingOnDay d).
+
+
+  Definition existsUniqueHappens :=
+    (exists d, ~~ hangingOnDay d)
+    /\
+    (forall d d',
+      ~~ hangingOnDay d
+      -> ~~ hangingOnDay d'
+      -> d = d')
+    ->
+    exists d, hangingOnDay d.
+
+  Lemma euhImpClassical :
+    (uniqueHanging dayBefore) ->
+    (exists d, ~~ hangingOnDay d) ->
+    existsUniqueHappens ->
+    (forall d, ~ hangingOnDay d \/ hangingOnDay d).
+Proof.
+  compute. intros UH EP EUH d.
+  destruct EP. generalize (dayEqDec d x).
+  intro de. inversion de. rewrite <- H0 in H. 
+  assert (EUHc : exists d : weekDay, hangingOnDay d).
+  apply EUH. split. exists d. tauto.
+  intros d0 d' nnd0 nnd'.
+  assert (dd : (~ d0<> d') -> d0 = d').
+  generalize (dayEqDec d0 d'). tauto.
+  apply dd. intro d0d'.
+  apply nnd0. intro hd0. apply nnd'. intro hd'.
+  apply d0d'. apply (UH d0 d'). tauto. tauto. tauto.
+  destruct EUHc. assert (x0 = d).
+  assert (dd : (~ x0<> d) -> x0 = d).
+  generalize (dayEqDec x0 d). tauto.
+  apply dd. intro. 
+  generalize (UH x0 d). tauto. rewrite H2 in H1.
+  auto.
+
+  left. intro. apply H. intro. generalize (UH d x). tauto. 
+Qed.
+ 
+  Definition twoPossible
+      (td : weekAndBefore) :=
+    exists d d', d <> d'
+    /\ ~~ hangingOnDay d
+    /\ ~~ hangingOnDay d'
+    /\ isBefore td d /\ isBefore td d'.
+
+  Definition twoPossiblePRDX
+      (td : weekAndBefore)  :=
+    (td = someWeekDay friday
+      -> exists d, hangingOnDay d)
+    /\
+    ((exists d, hangingOnDay d)
+      -> uniqueHanging dayBefore)
+    /\
+    ((isBefore td friday /\ noHangingYet td) ->
+      twoPossible td).
+
+
+  Lemma cantBeSurpFriday :
+    twoPossiblePRDX (someWeekDay thursday)
+    -> noHangingYet (someWeekDay thursday)
+    -> False.
+Proof.
+  unfold twoPossiblePRDX. intros. destruct H.
+  compute in H1. compute in H0.
+  destruct H1. 
+  assert (H2pf : True /\
+     (forall d : weekDay,
+      (match d with
+       | friday => True
+       | _ => False
+       end -> False) -> hangingOnDay d -> False) ). tauto.
+  generalize (H2 H2pf). intro.
+  destruct H3. destruct H3.
+  destruct x; destruct x0; compute in H3; try tauto.
+Qed.
+
+
+  Definition uniqueMaybe
+      (td : weekAndBefore) :=
+    forall d d',
+    isBefore td d /\ isBefore td d' ->
+    ~~ hangingOnDay d ->
+    ~~ hangingOnDay d' ->
+    d = d'.
+
+
+  Lemma uniqueMaybeEqv
+      (td : weekAndBefore) :
+    uniqueHanging td
+    <->
+    uniqueMaybe td.
+Proof.
+  split; unfold uniqueHanging; unfold uniqueMaybe; intros.
+  assert (dd : (~ d<> d') -> d = d').
+  generalize (dayEqDec d d'). tauto.
+  apply dd. intro dd'. apply H1.
+  intro. apply H2. intro. apply dd'.
+  apply (H d d'); try tauto.
+  generalize (H d d'). tauto.
+Qed.
+  
+
+  Lemma twoNotUnique :
+    forall td,
+    twoPossible td ->
+    ~ uniqueHanging td.
+Proof.
+  unfold twoPossible; unfold uniqueHanging; intros.
+  intro. destruct H. destruct H. destruct H.
+  generalize (H0 x x0). tauto.
+Qed. 
+
+(* test stuff *)
+
+
+  Lemma cantBeSurpT :
+    twoPossiblePRDX (someWeekDay wednesday)
+    -> noHangingYet (someWeekDay wednesday)
+    -> False.
+Proof.
+  unfold twoPossiblePRDX. intros. destruct H.
+  compute in H1. compute in H0.
+  destruct H1. 
+  assert (H2pf : True /\
+     (forall d : weekDay,
+      (match d with
+       | thursday | friday => True
+       | _ => False
+       end -> False) -> hangingOnDay d -> False) ). tauto.
+  generalize (H2 H2pf). intro.
+  destruct H3. destruct H3. 
+
+generalize (H0 monday). generalize (H0 
+  destruct x; destruct x0; compute in H3; try tauto.
+Qed.
+
+
+  unfold twoPossible; unfold uniqueHanging; intros.
+  elim H. destruct H. destruct H. destruct H.
+  generalize (H0 x x0). tauto.
+  elim
+  
+  
+
+
+  Proposition existsHangFunc :
+    $\exists$ hangingOn, $\forall$ td,
+    td $\neq$ (someWeekDay thursday) $\to$
+    twoPossiblePRDX_param hangingOn td.
+
+
+For any subset {\tt S $\subseteq$ W} of cardinality at least 2, such that for all
+{\tt s $\in$ W - S}, $\neg ${\tt myPick s}, there exist at least two distinct
+elements in {\tt S}, such that $\neg~\neg~${\tt myPick s}.
+
+
+
+
+
+
+
+
 
 (* both directions is wrong *)
 Definition hangingHappens := ~(forall d, ~hangingOnDay d).
