@@ -613,7 +613,7 @@ Kripke semantics, employing the notion of persuasion, is in \cite{kripkemodal}.
 The use of non-classical logic,
 eg., appealing to Goedel's incompleteness, was first applied to the
 paradox in \cite{goedelized}, then in \cite{godelinconsistent}, and most recently
-in \cite{constructive}. The latter assumes the underlying logic to itself be
+in \cite{constructive} \cite{nonpredet}. The latter two works assume the underlying logic to itself be
 constructive, as compared to reasoning via the provability operator $\mathsf{Pr}$ to indicate
 a possibly non-classical statement. This approach aligns most closely with ours.
 
@@ -1163,18 +1163,25 @@ its mechanization of the problem (ii) providing a resolution to the paradox that
 intuition (iii) leading us to making new subtle observations about the
 constraints of the problem and how they are hidden by language.
 
-As part of future work, a proof of the existence of {\tt hangingOnDay}, such that
-a version of {\tt twoPossiblePRDX td} (parametrized by the hanging decision
-function) holds for all days except Thursday,
+As part of future work, we would like to show that for each day  {\tt td}, there
+is a function {\tt hangingOn}, that assigns to each day proposition values about the
+occurrence of the hanging on that day, such that
+for each day except Thursday, the conditions of the paradox are satisfied by this
+function.
 
 \begin{lstlisting}[mathescape=true]
-  Proposition existsHangFunc :
-    $\exists$ hangingOn, $\forall$ td,
+  Proposition existsHangFunc td :
+    $\exists$ hangingOn,
     td $\neq$ (someWeekDay thursday) $\to$
     twoPossiblePRDX_param hangingOn td.
 \end{lstlisting}
 
-would valuable in
+Note here that there is no one function that makes the assignment for all days
+{\tt td}. The reason for this is that depending on the week day, these must be different.
+For example, on Friday, a unique hanging must have been assigned, which contradicts
+the two necessary possibilities that must exist for other week days.
+
+Proving the above proposition would valuable in
 establishing our formalization as the universally accepted one. Additionally,
 this paradox formalization could be further analyzed by way of considering its
 relationship to the axiom of choice. This is due to its (at least surface level)

@@ -205,55 +205,43 @@ Definition uniqueHanging_param
     (td : weekAndBefore) :=
   forall d d',
   isBefore td d /\ isBefore td d' ->
-  hangingOnDay d ->
-  hangingOnDay d' ->
+  hangingOn d ->
+  hangingOn d' ->
   d = d'.
 
 Definition noHangingYet_param
-  (td : weekAndBefore)
-      (hangingOn : weekDay -> Prop)
-   := forall d, isOnOrAfter td d -> ~ hangingOnDay d.
+   (hangingOn : weekDay -> Prop)
+   (td : weekAndBefore)
+   := forall d, isOnOrAfter td d -> ~ hangingOn d.
 
 Definition twoPossible_param
-    (td : weekAndBefore) 
-    (hangingOn : weekDay -> Prop) :=
+    (hangingOn : weekDay -> Prop)
+    (td : weekAndBefore) :=
   exists d d', d <> d'
-  /\ ~~ hangingOnDay d
-  /\ ~~ hangingOnDay d'
+  /\ ~~ hangingOn d
+  /\ ~~ hangingOn d'
   /\ isBefore td d /\ isBefore td d'.
 
 
 
 Definition twoPossiblePRDX_param
-    (td : weekAndBefore)  
-    (hangingOn : weekDay -> Prop):=
+    (hangingOn : weekDay -> Prop)
+    (td : weekAndBefore) :=
   (td = someWeekDay friday
     -> exists d, hangingOn d)
   /\
   ((exists d, hangingOn d)
     -> uniqueHanging_param hangingOn dayBefore)
   /\
-  ((isBefore td friday /\ noHangingYet_param td hangingOn) ->
-    twoPossible_param td hangingOn).
+  ((isBefore td friday /\ noHangingYet_param hangingOn td) ->
+    twoPossible_param hangingOn td).
 
-Definition existsHangFunc :=
-  exists (hangingOn : weekDay -> Prop), forall td,
-  td <> (someWeekDay thursday) \/ exists d, hangingOn d ->
-  twoPossiblePRDX_param td hangingOn.
-
-
-(* this is wrong *)
-Fixpoint hangingOn d : Prop :=
-  match d with 
-  | monday => hangingOn monday
-  | tuesday => True
-  | wednesday => True
-  | thursday => True
-  | friday => True
-  end.
-    forall td, td <> (someWeekDay thursday) \/ exists d, hangingOn d ->
-    twoPossiblePRDX_param td hangingOn.
-
-
+Lemma existsHangFunc td :
+  exists (hangingOn : weekDay -> Prop), 
+  td <> (someWeekDay thursday) 
+  -> twoPossiblePRDX_param hangingOn td.
+Proof.
+  destruct td.
+  split; try split; destruct td; compute. split. split.
 
 
