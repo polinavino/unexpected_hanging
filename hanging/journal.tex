@@ -419,7 +419,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Solving the Unexpected Hanging Paradox with a New Surprise Definition}
+\title{Formalizing the Unexpected Hanging Paradox in Coq : a New Surprise Definition}
 %
 %
 % author names and IEEE memberships
@@ -641,28 +641,10 @@ by the day about which the proposition of surprise is constructed.
 Because constructive logical is notoriously slippery, we chose to use a proof
 assistant (Coq, see \cite{coqmanual}) to take a closer, more high-assurance look at the
 interplay between the seemingly simple conditions of this conundrum.
-We also give an analysis of the relation of the informal meaning of surprise
-to its formalization.
-
-The contributions of this paper are as follows :
-
-\begin{itemize}
-  \item[(i)] a formal specification (in Coq) of the types and conditions of the that
-  are shared among existing interpretations, using dependent types and constructive logic,
-  Section \ref{sec:universal} ;
-  \item[(ii)] a definition (in Coq) of surprise from a previous work, with an analysis of it
-  in Section \ref{sec:one} ;
-  \item[(iii)] a novel definition (in Coq) of surprise that we propose,
-  Section \ref{sec:two};
-  \item[(ii)] a formally verified proof that a Friday hanging is not a surprise, Section \ref{sec:two};
-  \item[(iii)] a formally verified proof that our definition of
-  surprise for this paradox is equivalent to the negation of the
-  constraint that the hanging happens on exactly one specific day, Section \ref{sec:unique};
-  \item[(iv)] an analysis of the unexpected hanging paradox offering a resolution without
-  contradiction, Sections \ref{sec:two} \ref{sec:unique} \ref{sec:tgit} \ref{sec:friday};
-\end{itemize}
-
-For our code, see \href{https://github.com/polinavino/unexpected_hanging/blob/master/unexpected_hanging.v}.
+There is precedent for the use of proof assistants to tackle philosophical
+investigation, with the most striking and recent example
+being a refinement of Kant's categorical imperative upon studying its
+formalization \cite{categoricalkant}.
 
 Our definition of surprise on a day $td$ is formulated to reflect
 the following natural language statement : a hanging has not occurred on or before the day $td$,
@@ -691,6 +673,27 @@ The crux of our paradox formalization analysis hinges on the observation that th
   (that if a hanging is only possible Friday, it must happen then)
   is too strong, resulting in classical reasoning about surprise.
 
+  The contributions of this paper are as follows :
+
+  \begin{itemize}
+    \item[(i)] a formal specification (in Coq) of the types and conditions of the that
+    are shared among existing interpretations, using dependent types and constructive logic,
+    Section \ref{sec:universal} ;
+    \item[(ii)] a definition (in Coq) of surprise from a previous work, with an analysis of it
+    in Section \ref{sec:one} ;
+    \item[(iii)] a novel definition (in Coq) of surprise that we propose,
+    Section \ref{sec:two};
+    \item[(ii)] a formally verified proof that a Friday hanging is not a surprise, Section \ref{sec:two};
+    \item[(iii)] a formally verified proof that our definition of
+    surprise for this paradox is equivalent to the negation of the
+    constraint that the hanging happens on exactly one specific day, Section \ref{sec:unique};
+    \item[(iv)] an analysis of the unexpected hanging paradox offering a resolution without
+    contradiction, Sections \ref{sec:two} \ref{sec:unique} \ref{sec:tgit} \ref{sec:friday};
+    \item[(v)] an analysis of the relation of the informal meaning of surprise
+    to its formalization.
+  \end{itemize}
+
+  For our code, see \href{https://github.com/polinavino/unexpected_hanging/blob/master/unexpected_hanging.v}.
 
 \section{Coq and the Paradox}
 \label{sec:form}
@@ -835,7 +838,7 @@ of the conditions of the paradox for each possible day as:
       $\to$ uniqueHanging dayBefore)
     $\wedge$
     ((td $<$ friday $\wedge$ noHangingYet td) ->
-      exists d, td $<$ d $\wedge$ $\neg~\neg~$ hangingOnDay d).
+      $\exists$ d, td $<$ d $\wedge$ $\neg~\neg~$ hangingOnDay d).
 \end{lstlisting}
 
 where the first two conjuncts are as described above, and
@@ -871,7 +874,7 @@ unique day implies certainty of hanging on that day :
   Definition existsUniqueHappens :=
     ($\exists$ d, $\neg~\neg$ hangingOnDay d)
     $\wedge$
-    ($\forall$ d',
+    ($\forall$ d d',
       $\neg~\neg$ hangingOnDay d
       $\to$ $\neg~\neg$ hangingOnDay d'
       $\to$ d = d')
@@ -886,7 +889,7 @@ associated code) :
 \begin{lstlisting}[mathescape=true]
   Lemma euhImpClassical :
     (uniqueHanging dayBefore) $\to$
-    (exists d, ~~ hangingOnDay d) $\to$
+    (exists d, $\neg~\neg~$ hangingOnDay d) $\to$
     existsUniqueHappens $\to$
     ($\forall$ d,
     $\neg~$ hangingOnDay d $\vee$ hangingOnDay d).
@@ -969,7 +972,7 @@ two possible distinct hanging days in the future" :
     (($\exists$ d, hangingOnDay d)
       $\to$ uniqueHanging dayBefore)
     $\wedge$
-    ((td $<$ friday $\wedge$ noHangingYet td) ->
+    ((td $<$ friday $\wedge$ noHangingYet td) $\to$
       twoPossible td).
 \end{lstlisting}
 
