@@ -770,11 +770,15 @@ Notice that the {\tt noHangingYet} function we introduced is actually a
 dependent proposition (a predicate), parametrized by
 the day {\tt td} that is \emph{today}. This is because we are interested in
 being able to reason under the conditions of the past being defined, but
-would like to vary what "the past" refers to. Similarly, we parametrize the
+would like to vary what "the past" refers to (ie. days {\tt d $\leq$ td}).
+
+Similarly, we parametrize the
 constraints of the paradox so that we are able to reason about
 whether we are still within them of at each point in the week,
 which is the level of detail in we are interested in. This lets us, for example,
-reason about the impossibility of surprise on Thursday, see Section \ref{sec:tgit}.
+reason about the impossibility of a surprise hanging on Friday, given that
+today is Thursday, but not be able to apply the same reasoning if
+today is only Wednesday, see Section \ref{sec:tgit}.
 
 We now specify two conditions, implicit in the informal
 description of the paradox :
@@ -1179,7 +1183,14 @@ function.
 Note here that there is no one function that makes the assignment for all days
 {\tt td}. The reason for this is that depending on the week day, these must be different.
 For example, on Friday, a unique hanging must have been assigned, which contradicts
-the two necessary possibilities that must exist for other week days.
+the two necessary possibilities that must exist for other week days. In fact,
+we would even be able to define a function of type
+
+{\tt todayIsAndHangingOn : weekAndBefore $\to$ weekDay $\to$ Prop}
+
+which returns a proposition about whether a hanging has happened on not on a given day {\tt d}, such that
+it is in accordance with the rules of the paradox as they apply to a specific
+{\tt td}.
 
 Proving the above proposition would valuable in
 establishing our formalization as the universally accepted one. Additionally,
