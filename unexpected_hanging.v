@@ -190,28 +190,78 @@ Proof.
   tauto. destruct td; try (destruct w); destruct hang; compute; try tauto.
 Qed.
 
-Lemma cantBeSurpFriday hangingOnTodayIsReasoningAbout : forall hang,
-  twoPossiblePRDX_param hangingOnTodayIsReasoningAbout hang (someWeekDay thursday)
-  -> noHangingYet_param hangingOnTodayIsReasoningAbout hang (someWeekDay thursday)
-  -> False.
-Proof.
-  intro. unfold twoPossiblePRDX_param. intros. destruct H.
-  destruct H. destruct H. destruct H. compute in H0.
-  generalize (H0 x). generalize H. generalize H1. destruct x; compute; try tauto.
-  compute in H0. assert (~twoPossible (someWeekDay thursday)).
-  compute. intro. destruct H1. destruct H1.
-  generalize (H0 x). destruct (H1).  destruct H3. 
-  destruct H4. intro. apply H3. intro. apply H4. intro.
-  generalize H5. generalize H6. destruct x; destruct x0; try tauto.
-  tauto. 
+
+Definition hangingOnTodayIsReasoningAbout_param realHF hang td d : Prop :=
+  (isOnOrAfter td hang -> hang = d) /\ ((isBefore td hang /\ isOnOrAfter td d) -> False)
+  /\ ((isBefore td hang /\ isBefore td d) -> (~ realHF hang td d)).
+
+Definition hangingFuncOk_param realHF : forall hang td, realHF = hangingOnTodayIsReasoningAbout_param realHF ->
+    ~ (td = (someWeekDay thursday) /\ hang = friday) -> 
+    twoPossiblePRDX_param (hangingOnTodayIsReasoningAbout_param realHF) hang td.
+Proof. 
+  intros hang td rhf H. assert (isBefore td hang \/ ~isBefore td hang).
+  Focus 2. inversion H0. right. split; try tauto. 
+  unfold hangingOnTodayIsReasoningAbout. split.
+  intro. unfold isOnOrAfter. intro. intro. 
+  generalize H3. intro rhfrec.
+  rewrite rhf in H3. 
+  unfold hangingOnTodayIsReasoningAbout_param in H3.
+  destruct H3. destruct H4. destruct H5.
+  unfold hangingOnTodayIsReasoningAbout_param in rhfrec.
+  tauto.
+  unfold hangingOnTodayIsReasoningAbout_param in rhfrec.
+  tauto.
+  exists thursday. exists friday. split.
+  intro. inversion H2. split. intro.
+  generalize H2. intro rhfrec.
+  rewrite rhf in H2. 
+  unfold hangingOnTodayIsReasoningAbout_param in H2.
+  apply rhfrec. 
+  unfold hangingOnTodayIsReasoningAbout_param.
+  destruct H2. 
+  unfold hangingOnTodayIsReasoningAbout_param in rhfrec.
+  split. intro. unfold isOnOrAfter in H2. tauto.
+  split. 
+  destruct td; try (destruct w); destruct hang; compute;
+  compute in H; compute in H0; compute in H1; compute in rhfrec; try tauto.
+  intros. intro. tauto. split.
+  intro.
+  generalize H2. intro rhfrec.
+  rewrite rhf in H2. 
+  unfold hangingOnTodayIsReasoningAbout_param in H2.
+  apply rhfrec. 
+  unfold hangingOnTodayIsReasoningAbout_param.
+  destruct H2. 
+  unfold hangingOnTodayIsReasoningAbout_param in rhfrec.
+  split. intro. unfold isOnOrAfter in H2. tauto.
+  split. 
+  destruct td; try (destruct w); destruct hang; compute;
+  compute in H; compute in H0; compute in H1; compute in rhfrec; try tauto.
+  intros. intro. tauto. split;
+  destruct hang; destruct td; try (destruct w); compute; try tauto.
+  left. split. compute; tauto.
+  split. destruct hang; destruct td; try (destruct w); compute; try tauto.
+  unfold hangingOnTodayIsReasoningAbout_param. intro. intros.
+  assert (hang = d). tauto. rewrite <- H5.
+  assert (hang = d'). tauto. rewrite <- H6.
+  tauto. destruct td; try (destruct w); destruct hang; compute; try tauto.
 Qed.
 
-
-Definition twoPossiblePRDX
-    (td : weekAndBefore)  :=
-  ((exists d, isOnOrAfter td d /\ hangingOnDay d) /\ uniqueHanging dayBefore)
-  \/
-  (noHangingYet td /\ twoPossible td).
+Lemma cantBeSurpFriday someHf : forall hang,
+  twoPossiblePRDX_param someHf hang (someWeekDay thursday)
+  -> noHangingYet_param someHf hang (someWeekDay thursday)
+  -> False.
+Proof.
+  intros. destruct H. destruct H. destruct H1. 
+  unfold noHangingYet_param in H0. generalize (H0 hang). tauto.
+  assert (~twoPossible_param someHf hang (someWeekDay thursday)).
+  compute. intro. destruct H1. destruct H1. destruct H1.
+  generalize (H0 x). intro. destruct (H2). destruct H4. intro.
+  unfold noHangingYet_param in H0. generalize (H0 x).
+  generalize (H0 x0). intros. assert ( x0 = friday /\ x = friday).
+  destruct x; destruct x0; compute in H6; compute in H7; compute; try tauto.
+  destruct H8. rewrite H8 in H1. rewrite H9 in H1. tauto. tauto. 
+Qed.
 
 Lemma twoNotUnique :
   forall td,
