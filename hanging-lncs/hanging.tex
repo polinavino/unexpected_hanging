@@ -67,7 +67,7 @@
   more than one possible day on which it can occur, and define surprise accordingly. We
   specify constraints of the paradox representing this surprise definition.
   We present a predicate that, in accordance with the paradox constraints, constructs a
-  proposition we can use to reason about
+  proposition we can use to specify
   the provability of the hanging on a specific day, given that today is a particular day of the week, and the hanging
   is planned for yet another day.
   We assert that this offers a satisfying resolution to the paradox in accordance with
@@ -91,7 +91,7 @@ and popularized by the Scientific American Mathematical
 Games column author Martin Gardner, discussed in his work \cite{diversions}.
 It describes the notion of a future event that
 is both certain, and not possible to predict the exact day of occurrence of,
-formulated as follows:
+formulated as follows: \newline
 
 \begin{myindent}
   A judge tells a condemned prisoner that he will be hanged at noon on one weekday
@@ -113,10 +113,10 @@ formulated as follows:
   not occur at all.
 
   The next week, the executioner knocks on the prisoner's door at noon on Wednesday –
-  which, despite all the above, was an utter surprise to him. Everything the judge said came true.
+  which, despite all the above, was an utter surprise to him. Everything the judge said came true. \newline
 \end{myindent}
 
-Existing formalization efforts attempt to address questions like "how can we formally
+ Existing formalization efforts attempt to address questions like "how can we formally
 define surprise?", "where is the flaw in the
 reasoning of the prisoner?" and "was it contradictory for the prisoner to have been
 hanged on Wednesday?". There is work on tackling these questions in multiple
@@ -133,9 +133,10 @@ Kripke semantics, employing the notion of persuasion, is in \cite{kripkemodal}.
 The use of constructive logic,
 e.g., appealing to G\"{o}del's incompleteness, was first applied to the
 paradox in \cite{goedelized}, then in \cite{godelinconsistent}, and most recently
-in \cite{constructive} \cite{nonpredet}. The latter two works assume the underlying logic to be itself
-constructive, as compared to reasoning via the provability operator $\mathsf{Pr}$ to indicate
-a possibly non-classical statement. This approach aligns most closely with ours.
+in \cite{constructive} \cite{nonpredet}. The first two rely on reasoning via the
+provability operator $\mathsf{Pr}$ to indicate
+a possibly non-classical statement, while the others assume the underlying logic to be itself
+constructive. This approach aligns most closely with ours.
 However, in this work we do not analyze the paradox from the point of view of
 what we can conclude from inconsistency of our system.
 
@@ -144,17 +145,21 @@ of the non-classical logic approaches and those from epistemology, as well
 as presenting four distinct approaches to formalizing the paradox, from which
 we take inspiration.
 
-We take the point of view that the constraints of the paradox are
+We take as our base assumption that the constraints of the paradox are
 fixed and correctly conveyed to the prisoner.
 Like the works we cited above, we chose to represent
 \emph{knowledge} as constructive propositions, leaving room for uncertainty, or possibility, by
-dropping the law of excluded middle.
+dropping the law of excluded middle. We additionally, make the assumption that
+the prisoner is able to continue drawing consistent conclusions about the paradox
+after the hanging occurs (which is more in line the surprise quiz version of this paradox).
 
-A distinction between existing work and our formalization is that
-we do not use modal or temporal logic (which is the approach in \cite{modalepistemic}).
+In our formalization we do not use modal or temporal logic
+(which is the approach in \cite{modalepistemic}).
 Instead, we take advantage of the expressivity of the dependently typed logic of Coq directly to
 achieve the formalization of the paradox constraints at different points in the week,
 and parametrized by a different day on which the hanging actually happens.
+Investigating the possibility of re-defining the
+dependently-typed functions we give as clauses in modal logic remains the subject of future work.
 
 We chose to use a proof
 assistant (Coq, see \cite{coqmanual}) to take a more high-assurance look at the
@@ -182,8 +187,8 @@ being a refinement of Kant's categorical imperative \cite{categoricalkant}.
     \item[(v)] The construction of a three-parameter predicate returning a proposition about
     whether or not a hanging happens on \emph{a given day}, given that we know whether or not a hanging
     happened on days up and including the parameter day \emph{today}, and a day on which the hanging
-    actually happens, see Section \ref{sec:predicate}, along with a proof that the reasoning specified by
-    this proposition is in accordance with our surprise specification;
+    \emph{actually happens}, see Section \ref{sec:predicate}, along with a proof that this predicate
+    is in accordance with our surprise specification;
 
     \item[(iv)] An alternate, weaker formalization of surprise (Section \ref{sec:one}). We give analysis of how
     our definition compares to this one, and why it gives us insufficient reasoning
@@ -209,7 +214,7 @@ would serve just as well for the purposes of this mechanization.
 
 To formalize the paradox, we need to reason about days of the week on which
 the paradox could happen, so we
-begin by constructing a type {\tt weekDay} the terms of which are week days:
+begin by constructing a type {\tt weekDay}, the terms of which are week days:
 
 \begin{lstlisting}[mathescape=true]
   Inductive weekDay : Type :=
@@ -229,19 +234,16 @@ following real-life weekday logic, e.g. Sunday is before Monday.
 
 It is important to emphasize here that $=,~\geq,~<$ are all \emph{decidable}
 comparison functions on days --- purely as a consequence of considering weekdays
-as totally, decidably ordered entities, even in constructive logic. Any predicates
+as totally ordered entities, even in constructive logic. Any predicates
 formulated solely out of those comparisons together with logical connectives are also decidable,
 with the implication that provability, knowledge, and truth are the same for such predicates,
 leaving no room for uncertainty.
-For this reason, solutions of the paradox constructed out of only such decidable
-predicates (e.g. \cite{godelinconsistent})
+For this reason, solutions of the paradox constructed out of only such decidable predicates (e.g. \cite{godelinconsistent})
 are operating in classical logic.
 
-Next, we specify the type of a
-function that, given a day of the week, returns $\mathsf{True}$ if we can prove the hanging
-happened then, and $\mathsf{False}$ if we can prove it did not. We reason about this function
-in the presence of preconditions that are formal interpretations of those described
-in the paradox. We leave this function as a variable:
+For this reason we define a (for now) abstract function, which specifies a subset of
+days of the week on which a hanging occurs. We later show that any such function
+admissible for this purpose must conform to the constraints of the paradox.
 
 \begin{lstlisting}[mathescape=true]
   Variable hangingOnDay : weekDay $\to$ Prop.
@@ -250,15 +252,15 @@ in the paradox. We leave this function as a variable:
 We discuss the existence of such a predicate, and how it changes depending
 on what day today is, and when a hanging actually happens, in Section \ref{sec:predicate}.
 Next, we define a predicate that formalizes the notion that no hanging has occurred
-yet (up to and including the parameter day {\tt td}, representing \emph{today}):
+yet (up to and including the parameter day {\tt td}, representing \emph{today}).
+This says that for any day {\tt d}, if it is before today {\tt td}, no hanging
+happened on {\tt d}:
 
 \begin{lstlisting}[mathescape=true]
   Definition noHangingYet (td : weekAndBefore) :=
     $\forall$ d, td $\geq$ d $\to$ $\neg $ hangingOnDay d.
 \end{lstlisting}
 
-This says that for any day {\tt d}, if it is before today {\tt td}, no hanging
-happened on {\tt d}.
 We use the double negation {\tt $\neg \neg$ hangingOnDay d} to formalize the statement that it is
 not possible to disprove that a hanging occurs on day {\tt d}. That is, a hanging
 is \emph{possible} on a given day.
@@ -305,9 +307,10 @@ the hanging predicate.
 \end{lstlisting}
 
 We make an observations about this: a future hanging is
-necessarily not unique. This seems wrong --- we would expect a hanging to be
-unique, it's implicit in the description of the paradox. However, we define
-surprise in part as a non-uniqueness of a future hanging.
+necessarily not unique. The proof of this lemma relies on the decidability of
+{\tt d = d'}, together with modus tollens. This result seems wrong --- we would expect a hanging to be
+unique, it's implicit in the description of the paradox. However, our definition of
+surprise, in fact, requires the non-uniqueness of a future hanging.
 
 \section{A lack of surprise}
 \label{sec:lack}
@@ -321,7 +324,7 @@ We define what it means for us to know that a hanging happened before today {\tt
     ($\exists$ d, td $\geq$ d $\wedge$ hangingOnDay d) $\wedge$ (uniqueHanging dayBefore).
 \end{lstlisting}
 
-For this predicate to be true, the function {\tt hangingOnDay} must be provably equivalent to \texttt{True}
+For this predicate to be true, the function {\tt hangingOnDay} must be provably \texttt{True}
 for exactly one day {\tt d} of the entire week, and {\tt False} for all other weekdays, and this day {\tt d} is
 before or on {\tt td}.
 This predicate {\tt knowHanging} should hold exactly when a hanging has already happened
@@ -335,19 +338,26 @@ Now, let us consider the negation of these two conditions for days {\tt d} after
       $\wedge$ (uniqueHanging dayBefore)).
 \end{lstlisting}
 
-Representing: either there is no hanging, or it is not unique. This expresses surprise fairly
+Representing that either there is no hanging, or it is not unique. Assuming no
+hanging has yet happened, this expresses surprise fairly
 well, however, it allows for the possibility that no hanging happens at all in the
 rest of the week, which should only be true if one had occurred before {\tt td}.
 So, we must add to this definition a constraint that if we are able to prove that no
 hanging happens this week, we have proven {\tt False} (we will separately handle the case for when
 a hanging did already happen).
 
-Note here that while we want to say that on each future day, proving a hanging
-occurrence should not be possible, adding this to our definition will allow us to
-prove that no hanging happens at all --- and we want the opposite of that.
+Note here that while we want to say that on each future day {\tt d}, proving a hanging
+occurrence should not be possible (i.e. {\tt $\neg$ hangingOnDay d}), adding this to
+our definition will allow us to
+prove that no hanging happens at all.
 That is, the proposition that no hanging happens the entire week implies that no
-hanging is even possible, as {\tt $\neg$ hangingOnDay d $\to$ $\neg$ ($\neg~\neg$ hangingOnDay d)}.
-We notice that the both {\tt uniqueHanging td} and its negation are trivially
+hanging is even possible, as \newline
+
+{\tt $\neg$ hangingOnDay d $\to$ $\neg$ ($\neg~\neg$ hangingOnDay d)} \newline
+
+This is inconsistent with the intuition of the paradox.
+
+We notice that both {\tt uniqueHanging td} and its negation are trivially
 satisfied whenever {\tt $\neg$ ($\exists$ d, td $<$ d $\wedge$ hangingOnDay d)}. For this
 reason we use the stronger {\tt twoPossible td} in our definition of surprise,
 which contradicts the possibility of there not being a hanging at all, and
@@ -366,47 +376,48 @@ for surprise to being possible after {\tt td} as
 
 According to the definition of the paradox, a Wednesday hanging satisfies
 the constraints. However, the spirit of the paradox seems to suggest there is nothing
-special about a Wednesday hanging. Here we explain how to parametrize our reasoning
-by different possible hanging days. Recall that we want to reason about what sort of
+special about a Wednesday hanging. Here we explain how to parametrize our predicates
+by different possible hanging days. Recall that we want to specify what sort of
 function {\tt hangingOnDay} satisfies the constraints of the paradox.
 
 We already parametrize the function {\tt surprise},
 representing our inability to predict a hanging day (i.e. choose a unique hanging day)
 after today {\tt td}, by what day today {\tt td} is. This function, in turn, builds propositions
-to reason about whether a hanging day happened on some day {\tt d} by using the
+about whether a hanging day happened on some day {\tt d} by using the
 predicate {\tt hangingOnDay}. We note that this predicate must actually be a different
 predicate depending on what day {\tt td} is as well, since we must vary it to
 indicate that we have full knowledge of all days before today.
 We require one more additional conditions in our hanging predicate --- the
 actual day of the occurrence of the hanging, which may be Wednesday or otherwise.
-So, all in all, a function
+So, all in all, we are interested in a function \newline
 
-{\tt hangingOnTodayIsReasoningAbout hang td d : Prop}
+{\tt hangingOnTodayIsReasoningAbout hang td d : Prop} \newline
 
-that we will define so that it satisfies the paradox constraints. It has three parameters:
+that satisfies the paradox constraints. It has three parameters:
 
 \begin{itemize}
-  \item[(i)] {\tt hang : weekDay} is the day on which the hanging actually occurs
-  (once today is or after this day, surprise should no longer be possible, but the paradox
+  \item[(i)] {\tt hang : weekDay} is the day on which the hanging actually occurs.
+  Once today is or after this day, surprise should no longer be possible, but the paradox
   conditions may not be violated);
   \item[(ii)] {\tt td : weekAndBefore}, which is the day that is "today", i.e. the day
-  on which the prisoner is reasoning about the hanging (all the days before and including today
-  should have a classical predicate about whether a hanging occurred or not);
+  on which the prisoner is reasoning about the hanging. For each day up to and including today
+  the proposition about whether a hanging has occurred or not is classical;
   \item[(iii)] {\tt d : weekDay}, the day about which the prisoner is reasoning (e.g.
   tomorrow), but should not be able to prove or disprove the occurrence of a hanging on,
   unless it already happened prior to {\tt td}.
 \end{itemize}
 
-Parametrizing by hanging day, let us define a set of reasoning predicates
+Parametrizing by hanging day, let us define a set of predicates
 each of which assumes a different actual day of hanging.
-We reformulate the reasoning predicate to be parametrized in this way.
+This parametrized predicate replaces the previous {\tt hangingOnDay} predicate
+in our definitions.
 To accommodate this change, we also parametrize all
 the predicates used in the definition, i.e. {\tt noHangingYetparam hangingOn hang td}, etc.
 
-\section{Paradox constraints}
+\section{Paradox statement}
 \label{sec:constraints}
 
-We now present the constraints to be placed by the description of the paradox on the
+We finally give the full statement of the constraints to be placed by the description of the paradox on the
 hanging predicate {\tt hangingOnTodayIsReasoningAbout} discussed above.
 
 \begin{lstlisting}[mathescape=true]
@@ -421,6 +432,7 @@ hanging predicate {\tt hangingOnTodayIsReasoningAbout} discussed above.
 \end{lstlisting}
 
 We want to define a {\tt hangingOnTodayIsReasoningAbout} such that
+the following lemma holds true:
 
 \begin{lstlisting}[mathescape=true]
 Lemma hangingFuncOk : $\forall$ hang td,
@@ -433,16 +445,18 @@ We explicitly exclude being surprised
 on Thursday by a Friday hanging, as it appears to legitimately be a situation devoid
 of surprise (see discussion below).
 The statement of the paradox can be interpreted using these constraints and
-the predicate definition as:
+the predicate definition as: \newline
 
 \begin{myindent}
   The executioner plans the hanging to be on the parameter
-  day {\tt hang}. He tells the prisoner that a correct approach to reasoning about
-  whether the hanging happens on a given day, {\tt hangingOnTodayIsReasoningAbout},
-  must satisfy the constraints of the paradox, as specified by {\tt twoPossiblePRDXparam}.
+  day {\tt hang}. He tells the prisoner that in order to, on each day of the week {\tt td},
+  draw the correct conclusion about whether the actual hanging day {\tt hang} coincides with a
+  particular week day {\tt d}, any predicate {\tt hangingOnTodayIsReasoningAbout}
+  he uses to make this conclusion
+  must satisfy the constraints of the paradox, as required by lemma {\tt hangingFuncOk}. \newline
 \end{myindent}
 
-We define the predicate:
+ We now define the predicate:
 
 \begin{lstlisting}[mathescape=true]
   Definition hangingOnTodayIsReasoningAbout hang td d : Prop :=
@@ -460,16 +474,16 @@ Next, we observe that the value {\tt True} instead of {\tt hf hang td d} would
 actually do the trick. In fact, we prove that it does by defining it that
 way and proving lemma {\tt hangingFuncOk}. However, claiming that a hanging is going to happen
 on all future days, and we can prove it, does not sound like a satisfying
-resolution. But we argue that it may well be --- since in order for us to
+resolution. We argue that it may well be --- since in order for us to
 "know when the hanging happens", we must prove that it happens on exactly one day.
 If we prove that it happens on multiple days in the future, this does not
-constitute knowledge of when the one promised hanging will happen.
+constitute knowledge of when the one (un)-expected hanging will happen.
 
 We do not specify a non-classical predicate {\tt hf} as Coq does not support
 straightforward definition of non-terminating functions.
 We conjecture (and aspire to show as part of future work) that it is possible to
 define {\tt hf} to be strictly weaker than {\tt True} for the relevant inputs,
-satisfying the paradox. Such a definition would align more closely with
+satisfying the paradox in a strictly intuitionistic way. Such a definition would align more closely with
 the intuition that all future days should have a \emph{possibility} of hanging.
 We also hope to specify the weakest possible {\tt hf} that satisfies the paradox.
 
@@ -494,7 +508,8 @@ Inductive reasoning in attempt to conclude that a Thursday hanging is
 predictable on Wednesday does not work because we do not have enough data on Wednesday
 to conclude whether a hanging will be Thursday or Friday. That is, to discount Friday
 as a possibility of surprise hanging, we \emph{need to know that there was no
-hanging Thursday}.
+hanging Thursday}. Thus, the prisoner's attempt at reasoning himself out
+of the hanging appears faulty.
 
 \section{At least one possible day}.
 \label{sec:one}
@@ -530,7 +545,7 @@ No inconsistency is introduced here, in fact, the hanging can still be a surpris
 happens on a Friday! The intuition behind this is: if no hanging happened by
 Thursday, it is still only possible to prove {\tt $\neg~\neg$~hangingOn hang td friday},
 from which we are not necessarily able to deduce that {\tt hangingOn hang td friday}.
-However, defining {\tt hf hang td d = True}, for all future days (when there is no hanging yet),
+However, defining {\tt hf hang td d = True}, for all future days, if no hanging has yet occurred,
 immediately results in being able to prove a unique (future) Friday hanging when today is Thursday.
 
 Let us consider the possible, i.e. $\neg~\neg$ case, and
@@ -538,7 +553,7 @@ what happens if we impose an additional constraint stating that
 exactly one \emph{possible} hanging
 day implies that it \emph{provably happens} on a specific day. A similar kind of reasoning is also explored in
 \cite{fourpossible}, with a similar conclusion to the one we draw here. The following
-proposition states that there is a possible hanging day, and that uniqueness of hanging day
+predicated states that (i) there is a possible hanging day, and that (ii) uniqueness of hanging day
 possibility implies certainty of hanging on that day:
 
 \begin{lstlisting}[mathescape=true]
@@ -563,14 +578,14 @@ associated code):
 \end{lstlisting}
 
 This is the crux of the reasoning the prisoner
-engages in informally to arrive at the judgement that
+engages in (informally) to arrive at the judgement that
 if a hanging has not happened by Thursday, it must happen on Friday.
-Note here that the inductive reasoning in the prisoner uses to conclude that the
-hanging cannot ever be a surprise is, in some sense, superfluous --- we can use
-constructive logic reasoning to prove, without induction, that "if we can conclude
-from existence plus uniqueness of a possible hanging day, that it is certain on that day,
+Note here that the inductive reasoning the prisoner uses to conclude that the
+hanging cannot ever be a surprise is, in some sense, superfluous --- we can,
+without induction, prove that "if we can conclude
+from existence plus uniqueness of a possible hanging day, that it is certain that on that day,
 \emph{our judgement about hanging occurring on any day must necessarily be classical}".
-The proof makes use of the fact that the equality comparison {\tt d = d'} is
+The proof, again, makes use of the fact that the equality comparison {\tt d = d'} is
 classical. This definition leaves us with the following conclusions about defining surprise as
 having at least one possible hanging day:
 
@@ -590,30 +605,35 @@ a conclusion that we would like make according to intuition,
 and (ii) removes any ambiguity
 about the future hanging day, and therefore, the possibility of surprise.
 
-With the two-possible definition of the paradox, surprise by Friday hanging is anyways
+With the two-possible definition of the paradox, being surprised by a Friday hanging is anyways
 not possible on Thursday.
-Our definition, however, does not allow us to conclude directly that a hanging will
+This definition, however, does not allow us to conclude directly that a hanging will
 definitely happen on Friday once we get to Thursday. Rather, it is that the
-conditions for surprise are not satisfied on Thursday in another way (insufficient
-possible days). An impossibility of a Friday hanging being a surprise on Thursday has no effect
-on the rest of the week (as shown in Section \ref{sec:constraints}) in the sense that
-the surprise constraints are satisfied on other combinations of days for all {\tt d}.
+conditions for surprise are not satisfied on Thursday in another way --- by having insufficient
+possible future hanging days. An impossibility of a Friday hanging being a surprise on Thursday has no effect
+on the rest of the week (as shown in Section \ref{sec:constraints}), in the sense that
+the surprise constraints are satisfied on other combinations of days.
 
-Note here that
-the difference between one- and two-possible versions of surprise, with respect
-to having proofs of future hangings, is that assuming
+Note here that there is a major difference
+between one- and two-possible versions of surprise with respect
+to the situation of today being Thursday, and no hanging has yet occurred.
+This difference is that assuming
 {\tt hf friday (someWeekDay thursday) friday = True}, rather than a only
-possibility of a hanging on Friday, breaks the one-possible paradox case.
-This is because the one-case, assuming the {\tt True} version of {\tt hf},
-allows a unique Friday hanging to be proved on Thursday without contradiction, but
+possibility of a hanging on Friday, breaks the one-possible paradox case,
+allowing us to prove things that go against our intuition.
+
+This is because the one-possible case, assuming the {\tt True} version of {\tt hf},
+allows us to prove a unique Friday hanging on Thursday without contradiction, but
 the two-case does not allow this. However, using a weaker {\tt hf} in the one-case, for which
 we can only prove a hanging possibility, does not allow us to conclude that
 the hanging will definitely happen on Friday even when it is the only possible day.
-So, we must \emph{rely} on the reasoning in
-{\tt existsUniqueHappens} to conclude surprise is not possible on Thursday,
+
+So, for the one-possible case, we must \emph{rely} on additional assumptions of
+classical reasoning to conclude surprise is not possible on Thursday,
 which leads to the conclusion that the prisoner arrived at.
-In the two-case, we can use the paradox definition to conclude that a Friday
-hanging will not be a surprise on Thursday, and can avoid requiring this reasoning.
+In the two-possible case, we can use the paradox definition itself, together with
+any suitable definition of the hanging predicate (classical or otherwise) to conclude that a Friday
+hanging will not be a surprise on Thursday.
 
 \section{Conclusion and Future Work}
 
@@ -622,7 +642,7 @@ parametrized by the day the hanging is planned,
 together with a family of predicates (a distinct one for each day the hanging
 will actually take place) that lets us reason, according to the knowledge the prisoner has,
 about a hanging happening or not happening on
-past and future hanging days from the perspective of each of the days of the week.
+a given past and future day from the perspective of each of the days of the week.
 This formalization appears to capture the
 conditions of the paradox and align with our intuition.
 We mechanized this definition, together with some related proofs, in the Coq
@@ -641,7 +661,7 @@ combinations of hanging day, today, and day about which we reason, as meeting
 the paradox conditions. However, we notice that
 our definition of hanging does not require us to adhere to non-classical
 reasoning if all that is needed to claim uncertainty about the hanging day
-is the ability to prove that it happens on multiple different days, rather than one unique one.
+is the ability to prove that it may happen on multiple different days, rather than one unique one.
 
 We compare our definition to a formalization of paradox constraints with a slightly
 weaker definition of surprise. This definition requires at least one day to
@@ -650,25 +670,29 @@ definition of the hanging predicate leads to the ability to prove knowledge of a
 Friday hanging on Thursday without contradiction. However, a non-classical
 definition of the hanging predicate does not allow us to definitively conclude a Friday hanging
 on Thursday --- only the possibility of it. Imposing this conclusion results in
-the ability to prove the existence of a unique future hanging, thus contradicting
-our notion of surprise.
+the ability to prove, on any day of the week, the existence of a unique future hanging, thus contradicting
+out intuition.
 
 As part of future work, we conjecture this paradox formalization could be further analyzed by way of considering its
 relationship to the axiom of choice. This is due to its (at least surface level)
 resemblance to the way the AC makes a connection between classical logic
 and a choice function \cite{accomp} as well as arbitrary elements \cite{randomness}.
 
-Another future direction we consider is generalizing the surprise hanging
-approach we propose to using constructive logic for describing and proving
-the existence of a function {\tt myPick}
-which represents choosing an arbitrary value from a decidable set. In particular,
-given a decidable set {\tt W}, \newline
+Another possible direction of future work that we have considered is looking into the
+possible applications of our definition of a future event whose timing is unpredictable,
+but guaranteed to be within a certain time frame.
 
-\begin{myindent}
-For any subset {\tt S $\subseteq$ W} of cardinality at least 2, such that for all
-{\tt s $\in$ W - S}, $\neg ${\tt myPick s}, there exist at least two distinct
-elements in {\tt S}, such that $\neg~\neg~${\tt myPick s}.
-\end{myindent}
+% Another future direction we consider is generalizing the surprise hanging
+% approach we propose to describing and proving
+% the existence of a function {\tt myPick : mySet $\to$ Prop}
+% which represents choosing an arbitrary value from a decidable set. In particular,
+% given a decidable set {\tt W}, \newline
+%
+% \begin{myindent}
+% For any subset {\tt S $\subseteq$ W} of cardinality at least 2, such that for all
+% {\tt s $\in$ W - S}, $\neg ${\tt myPick s}, there exist at least two distinct
+% elements in {\tt S}, such that $\neg~\neg~${\tt myPick s}.
+% \end{myindent}
 
 % \section{First Section}
 % \subsection{A Subsection Sample}
