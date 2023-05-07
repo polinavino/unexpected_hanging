@@ -66,13 +66,14 @@
   certainty.
   We make the observation that an inevitable, but unexpected, event requires there being strictly
   more than one possible day on which it can occur, and define surprise accordingly. We
-  formalize the paradox using this interpretation of surprise.
-  We observe that our paradox specification
-  can be instantiated equally well in both constructive and classical logics.
-  The classical instantiation of our definition lets us formally make the same intuitive
-  conclusions as the constructive definition, and as
-  existing work which uses self-referential predicates.
-  We assert that this offers a satisfying resolution to the paradox in accordance with
+  formalize the paradox using this interpretation of surprise. Additionally, we
+  specify a family of
+  predicates for making judgements about whether a hanging occurs on a particular day,
+  which are in accordance with the paradox constraints.
+  We demonstrate that this family is inhabited by classical predicates.
+  We then show that a classical version of our definitions lets us formally make the desired intuitive
+  conclusions previously made in existing work using self-referential predicates.
+  We assert that this offers an unexpected, but satisfying resolution to the paradox in accordance with
   our intuition.
   We compare our definition to an existing, weaker, interpretation of surprise,
   giving an analysis of how it interplays with the use of constructive logic.
@@ -145,12 +146,12 @@ we take inspiration.
 
 Here, we give formal and mechanized descriptions of related but distinct aspects of the
 paradox: the conditions of the
-paradox, and a predicate that can be used to make judgements about the hanging day
-in accordance with the paradox constraints. We note that such a predicate
-can be instantiated both classically and intuitionistically. With the
-right definition of "knowledge of the hanging day", either option allows us
+paradox, and a family of predicates that can be used to make judgements about the hanging day
+in accordance with the paradox constraints. We note that this family of predicates
+may contain both classical and intuitionistical members. With the
+right definition of "knowledge of the hanging day", a classical inhabitant allows us
 to make consistent judgements, as well as judgements about inconsistencies,
-which are similar in content to the self-referential formalization presented
+which are similar in content to those in the self-referential formalization presented
 in \cite{godelinconsistent}.
 
 We take as our base assumption that the constraints of the paradox are
@@ -666,8 +667,8 @@ conditions of the paradox and align with our intuition, without the need
 for self-reference.
 We mechanized this definition, together with some related proofs, in the Coq
 proof assistant, relying on the particularities of constructive logic to represent
-the uncertainty, or possibility. Crucially, we have demonstrated that
-even a classical definition of a hanging predicate can satisfy the paradox
+the uncertainty, or possibility. Crucially, however, we have demonstrated that
+even a classical instantiation of a hanging predicate can satisfy the paradox
 constraints (and relevant conclusions about them), if in a slightly odd way.
 A few key ideas were needed to achieve this.
 
