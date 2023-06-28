@@ -60,7 +60,7 @@
   unexpected hanging paradox, sometimes called the surprise \\
   examination paradox,
   mechanized in the Coq Proof Assistant.
-  This \\ paradox requires the definition of the notion of
+  This paradox requires the definition of the notion of
   a \emph{surprise} event, which, for the purposes of this paradox, is usually interpreted as
   the inability to predict what day a specific event takes place. As in existing work,
   the use of constructive logic allows us to distinguish between possibility and
@@ -225,7 +225,7 @@ independently, forming a parametrized family of propositions.
 
   For our code, see \url{https://github.com/polinavino/unexpected_hanging/blob/master/unexpected_hanging.v}.
 
-\section{Mechanizing the paradox}
+\section{Mechanizing the Paradox}
 \label{sec:form}
 
 Coq is a proof assistant based on the typed programming language Calculus of Constructions, which also forms a constructive foundation for mathematics.
@@ -306,7 +306,7 @@ equivalent to a single negation, as, in constructive logic,
 Therefore, no hanging is possible on {\tt d} if and only if no hanging occurs on
 {\tt d}.
 
-\section{Uniqueness of the hanging day }
+\section{Uniqueness of the Hanging Day }
 \label{sec:unique}
 
 Reasoning about the uniqueness of a hanging day plays an important role in the
@@ -360,7 +360,7 @@ has already occurred in the \emph{past}, we must define the paradox constraints
 in a way that ensures that no \emph{additional} hanging can happen in the future,
 making a past hanging remain unique.
 
-\section{A lack of surprise}
+\section{A Lack of Surprise}
 \label{sec:lack}
 
 Surprise is a hard concept to make precise, so we define, instead, what it means to be certain about
@@ -426,7 +426,7 @@ the constraints. However, the spirit of the paradox seems to suggest there is no
 special about a Wednesday hanging. Next, we explain how to accommodate this by
 modifying the hanging function with additional arguments.
 
-\section{The hanging function}
+\section{The Hanging Function}
 \label{sec:hang-func}
 
 We used the unspecified function {\tt hangingOnDay} in our earlier definitions to simplify
@@ -483,7 +483,7 @@ a future hanging can actually be admissible as satisfying paradox constraints.
 To characterize when such functions are admissible, we give the complete definition
 of the paradox.
 
-\section{Paradox statement}
+\section{Paradox Statement}
 \label{sec:constraints}
 
 The function {\tt twoPossiblePRDXparam}, below, \emph{assesses the beliefs}
@@ -616,7 +616,7 @@ of the hanging appears faulty --- which aligns with the premise of the
 paradox that a hanging does indeed occur. However, we argue that this conclusion
 is possible with the following weaker definition of surprise.
 
-\section{At least one possible day}
+\section{At Least One Possible Day}
 \label{sec:one}
 
 In any formalization of the paradox, there appear to only be the following reasonable
@@ -902,7 +902,7 @@ but guaranteed to be within a certain time frame.
 \subsubsection*{Acknowledgements}
 
 I would like to thank my awesome graduate school supervisors, Dr. Amy Felty
-and Dr. Philip Scott, as well as numberous colleagues at IOG, 
+and Dr. Philip Scott, as well as numberous colleagues at IOG,
 for listening to me ramble on about this paradox.
 I would especially like to thank Dr. Pieter Hofstra, may he rest in peace,
 for making the bold move of asking for a resolution
