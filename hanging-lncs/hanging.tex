@@ -65,7 +65,7 @@
   the inability to predict what day a specific event takes place. Our use of constructive logic allows us to distinguish between possibility and
   certainty.
   We make the observation that an inevitable, but unexpected, event requires there being strictly
-  more than one possible day on which it can occur, and define surprise accordingly.
+  more than one possible day on which it can occur, and define surprise accordingly. \newline
 
   We
   formalize the paradox using this interpretation of surprise, then
@@ -392,8 +392,7 @@ Now, let us consider the negation of these two conditions for days {\tt d} after
       $\wedge$ (uniqueHanging dayBefore)).
 \end{lstlisting}
 
-Assuming no
-hanging has yet happened, this expresses surprise fairly
+Assuming no hanging has yet happened, this expresses surprise fairly
 well, however, it allows for the possibility that no hanging happens at all in the
 rest of the week, which should only be true if one had occurred before {\tt td}.
 That is, {\tt uniqueHanging td} and its negation are trivially
@@ -539,7 +538,7 @@ situation devoid
 of surprise, since a unique day remains for the possible hanging day.
 The following lemma (see the code for the proof) states that no
 function constructing beliefs
-that adrehere to the judge's announcement can form a consistent belief
+that adhere to the judge's announcement can form a consistent belief
 about the hanging day given that today is Thursday, and no hanging has occurred yet.
 
 \begin{lstlisting}[mathescape=true]
@@ -561,7 +560,7 @@ the constraint as "if a hanging has not already happened, then in must be
 \emph{possible} on any future day {\tt d},
 
 \begin{lstlisting}[mathescape=true]
-    (td < hang $\wedge$ td < d) $\to$ $\neg \neg$ ($\neg$ hf hang td d)
+    (td < hang $\wedge$ td < d) $\to$ $\neg \neg$ (hf hang td d)
 \end{lstlisting}
 
 where possibility is expressed via double negation. The paradox intuitively
@@ -629,7 +628,7 @@ options for what conclusion
 can be made about a Friday hanging on Thursday: it is either (1) provable,
 (2) not disprovable, i.e. possible, or (3) disprovable.
 We have explored a formalization where it is disprovable, and for this reason,
-excluded from the domain of definition of beliefs consistend with the paradox.
+excluded from the domain of definition of beliefs consistent with the paradox.
 Here, we will look at
 (1) and (2), which are not mutually exclusive, but an interesting distinction nonetheless.
 
@@ -913,7 +912,7 @@ but guaranteed to be within a certain time frame.
 \subsubsection*{Acknowledgements}
 
 I would like to thank my awesome graduate school supervisors, Dr. Amy Felty
-and Dr. Philip Scott, as well as numberous colleagues at IOG,
+and Dr. Philip Scott, as well as numerous colleagues at IOG,
 for listening to me ramble on about this paradox.
 I would especially like to thank Dr. Pieter Hofstra, may he rest in peace,
 for making the bold move of asking for a resolution
