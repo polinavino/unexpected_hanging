@@ -149,11 +149,11 @@ Definition twoPossible_param
   /\ isBefore td d /\ isBefore td d'.
 
 
-Definition hf (hang : weekDay) (td : weekAndBefore) (d : weekDay) := True.
+Definition hft (hang : weekDay) (td : weekAndBefore) (d : weekDay) := True.
 
-Definition hangingOnTodayIsReasoningAbout hang td d : Prop :=
+Definition hangingOnTodayIsReasoningAbout (hf : weekDay -> weekAndBefore -> weekDay -> Prop) hang td d : Prop :=
   (isOnOrAfter td hang -> hang = d) /\ ((isBefore td hang /\ isOnOrAfter td d) -> False)
-  /\ ((isBefore td hang /\ isBefore td d) -> (~~ hf hang td d)).
+  /\ (~(hf hang td d) -> ~(isBefore td hang /\ isBefore td d)).
 
 
 Definition twoPossiblePRDXparam 
@@ -166,21 +166,24 @@ Definition twoPossiblePRDXparam
       /\ twoPossible_param hangingOn hang td).
 
 
-Definition hangingFuncOk : forall hang td,
+Definition hangingFuncOk : 
+    forall hf, (forall hang td d, ~(hf hang td d) -> ~(isBefore td hang /\ isBefore td d)) ->
+    forall hang td, 
     ~ (td = (someWeekDay thursday) /\ hang = friday) -> 
-    twoPossiblePRDXparam hangingOnTodayIsReasoningAbout hang td.
+    twoPossiblePRDXparam (hangingOnTodayIsReasoningAbout hf) hang td.
 Proof. 
-  intros. assert (isBefore td hang \/ ~isBefore td hang).
+  intros hf hfPrem. intros. assert (isBefore td hang \/ ~isBefore td hang).
   Focus 2. inversion H0. right. split; try tauto. 
   unfold hangingOnTodayIsReasoningAbout. split.
   intro. unfold isOnOrAfter. intro. intro. tauto.
   exists thursday. exists friday. split.
-  intro. inversion H2. unfold hf. split. intro.
+  intro. inversion H2. generalize (hfPrem hang td thursday). intro hft. 
+  split. intro.
   apply H2. split; try split; try tauto.
   compute. tauto. 
   destruct td; try (destruct w); destruct hang; 
   compute in H2; compute in H; compute in H0; compute in H1; try tauto. 
-  split. intro.
+  split. intro. generalize (hfPrem hang td friday). intro hff.
   destruct td; try (destruct w); destruct hang; 
   compute in H2; compute in H; compute in H0; compute in H1; try tauto. 
   destruct td; try (destruct w); destruct hang; 
